@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BarangayAssist{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- 1. SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo"><ion-icon name="home-outline"></ion-icon></div>
+            <div class="brand-text">
+                <h2>Barangay<span>Assist</span></h2>
+                <p>COMMUNITY CONCERN PORTAL</p>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="{% url 'dashboard' %}" class="nav-item {% block nav_dashboard %}active{% endblock %}">
+                <ion-icon name="grid-outline"></ion-icon> Dashboard
+            </a>
+            <a href="{% url 'submit_concern' %}" class="nav-item {% block nav_submit %}{% endblock %}">
+                <ion-icon name="document-text-outline"></ion-icon> Submit Concern
+            </a>
+            <a href="#" class="nav-item {% block nav_concerns %}{% endblock %}">
+                <ion-icon name="list-outline"></ion-icon> My Concerns
+            </a>
+            <a href="#" class="nav-item {% block nav_profile %}{% endblock %}">
+                <ion-icon name="person-outline"></ion-icon> Profile
+            </a>
+            <button class="nav-item theme-toggle" id="darkModeBtn">
+                <div class="theme-icon">
+                    <ion-icon name="moon-outline" id="darkModeIcon"></ion-icon>
+                </div>
+                <span id="darkModeText">Dark Mode</span>
+            </button>
+            <a href="{% url 'logout' %}" class="nav-item logout">
+                <ion-icon name="log-out-outline"></ion-icon> Logout
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <p class="sidebar-slogan">A Stronger Community Together</p>
+            <div class="sidebar-illustration">
+                <div class="hill hill-one"></div>
+                <div class="hill hill-two"></div>
+                <div class="mini-building">
+                    <div class="mini-roof"></div>
+                    <div class="mini-door"></div>
+                    <div class="mini-window window-one"></div>
+                    <div class="mini-window window-two"></div>
+                </div>
+                <div class="mini-tree tree-one"></div>
+                <div class="mini-tree tree-two"></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 2. MAIN CONTAINER -->
+    <div class="main">
+        <header class="topbar">
+            <button class="mobile-menu" id="mobileMenuBtn"><ion-icon name="menu-outline"></ion-icon></button>
+
+            <nav class="top-nav">
+                <a href="{% url 'dashboard' %}" class="top-nav-item {% block topnav_dashboard %}active{% endblock %}">
+                    <ion-icon name="grid-outline"></ion-icon> Dashboard
+                </a>
+                <a href="{% url 'submit_concern' %}" class="top-nav-item {% block topnav_submit %}{% endblock %}">
+                    <ion-icon name="document-text-outline"></ion-icon> Submit Concern
+                </a>
+            </nav>
+
+            <div class="user-profile">
+                <div class="user-avatar"><ion-icon name="person-outline"></ion-icon></div>
+                <div class="user-info">
+                    <strong id="userDisplayName">{{ request.user.get_clean_name }}</strong>
+                    <span>Resident</span>
+                </div>
+                <ion-icon name="chevron-down-outline" class="user-arrow"></ion-icon>
+            </div>
+        </header>
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Ionicons Script -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <!-- Theme & Dynamic UI Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cleans email handles and formats full names
+            const nameEl = document.getElementById('userDisplayName');
+            if (nameEl) {
+                let rawText = nameEl.textContent.trim();
+                let cleanName = rawText.split('@')[0];
+                nameEl.textContent = cleanName.replace(/\b\w/g, char => char.toUpperCase());
+            }
+
+            const darkModeBtn = document.getElementById('darkModeBtn');
+            const darkModeText = document.getElementById('darkModeText');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.querySelector('.sidebar');
+
+            function updateTheme(isDark) {
+                const currentIcon = document.getElementById('darkModeIcon');
+
+                if (isDark) {
+                    document.body.classList.add('dark-mode');
+                    if (darkModeText) darkModeText.textContent = 'Light Mode';
+                    
+                    if (currentIcon) {
+                        currentIcon.outerHTML = '<ion-icon name="sunny-outline" id="darkModeIcon"></ion-icon>';
+                    }
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    if (darkModeText) darkModeText.textContent = 'Dark Mode';
+                    
+                    if (currentIcon) {
+                        currentIcon.outerHTML = '<ion-icon name="moon-outline" id="darkModeIcon"></ion-icon>';
+                    }
+                    localStorage.setItem('theme', 'light');
+                }
+            }
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                updateTheme(true);
+            }
+
+            darkModeBtn?.addEventListener('click', () => {
+                const isDark = document.body.classList.contains('dark-mode');
+                updateTheme(!isDark);
+            });
+
+            const navItems = document.querySelectorAll('.sidebar-nav .nav-item:not(.theme-toggle):not(.logout)');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            mobileMenuBtn?.addEventListener('click', () => {
+                sidebar?.classList.toggle('open');
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

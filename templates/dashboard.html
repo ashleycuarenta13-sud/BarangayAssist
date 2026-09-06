@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - BarangayAssist{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+{% block topnav_dashboard %}active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-content">
+
+    <!-- ============================== -->
+    <!-- WELCOME CARD -->
+    <!-- ============================== -->
+    <section class="welcome-card">
+        <div class="welcome-text">
+            <span class="section-label">RESIDENT DASHBOARD</span>
+            <h1>Welcome resident, {{ request.user.username|cut:"@gmail.com"|title }}!</h1>
+            <p>Manage your community concerns and track their progress.</p>
+        </div>
+
+        <div class="barangay-image">
+            <img src="{% static 'images/barangay-hall.png' %}" alt="Barangay Hall">
+        </div>
+    </section>
+
+    <!-- ============================== -->
+    <!-- STATS GRID -->
+    <!-- ============================== -->
+    <section class="stats-grid">
+        <div class="stat-card total">
+            <div class="stat-icon"><ion-icon name="document-text-outline"></ion-icon></div>
+            <div class="stat-info">
+                <strong>{{ concerns.count|default:"0" }}</strong>
+                <span>Total Concerns</span>
+            </div>
+        </div>
+
+        <div class="stat-card pending">
+            <div class="stat-icon"><ion-icon name="time-outline"></ion-icon></div>
+            <div class="stat-info">
+                <strong>{{ pending_count|default:"0" }}</strong>
+                <span>Pending</span>
+            </div>
+        </div>
+
+        <div class="stat-card progress">
+            <div class="stat-icon"><ion-icon name="settings-outline"></ion-icon></div>
+            <div class="stat-info">
+                <strong>{{ in_progress_count|default:"0" }}</strong>
+                <span>In Progress</span>
+            </div>
+        </div>
+
+        <div class="stat-card resolved">
+            <div class="stat-icon"><ion-icon name="checkmark-outline"></ion-icon></div>
+            <div class="stat-info">
+                <strong>{{ resolved_count|default:"0" }}</strong>
+                <span>Resolved</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================== -->
+    <!-- CONTENT GRID -->
+    <!-- ============================== -->
+    <section class="content-grid">
+        <div class="left-column">
+            <div class="submit-card">
+                <div class="submit-content">
+                    <span class="section-label">QUICK ACTION</span>
+                    <h2>Submit a Concern</h2>
+                    <p>Tell us what's happening. We'll route it to the appropriate office or department.</p>
+                    <a href="{% url 'submit_concern' %}" class="primary-btn">
+                        <ion-icon name="add-outline"></ion-icon> File a Concern
+                    </a>
+                </div>
+
+                <div class="common-concerns">
+                    <h3>Common Concerns</h3>
+                    <div class="concern-grid">
+                        <button class="concern-type">
+                            <div class="concern-icon"><ion-icon name="bulb-outline"></ion-icon></div>
+                            <small>Street Lights</small>
+                        </button>
+                        <button class="concern-type">
+                            <div class="concern-icon"><ion-icon name="trash-outline"></ion-icon></div>
+                            <small>Waste Collection</small>
+                        </button>
+                        <button class="concern-type">
+                            <div class="concern-icon"><ion-icon name="water-outline"></ion-icon></div>
+                            <small>Water Supply</small>
+                        </button>
+                        <button class="concern-type">
+                            <div class="concern-icon"><ion-icon name="trail-sign-outline"></ion-icon></div>
+                            <small>Roads & Drainage</small>
+                        </button>
+                        <button class="concern-type">
+                            <div class="concern-icon"><ion-icon name="people-outline"></ion-icon></div>
+                            <small>Community Services</small>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-card">
+            <div class="recent-header">
+                <div>
+                    <span class="section-label">ACTIVITY</span>
+                    <h2>Recent Concerns</h2>
+                </div>
+                <button class="view-all">View All <ion-icon name="arrow-forward-outline"></ion-icon></button>
+            </div>
+
+            {% for concern in concerns %}
+            <div class="concern-row">
+                <div class="concern-details">
+                    <strong>{{ concern.title }}</strong>
+                    <span>{{ concern.description|truncatewords:6 }}</span>
+                </div>
+                <span class="category infrastructure">{{ concern.category }}</span>
+                <div class="status-area">
+                    <span class="status {{ concern.status|slugify }}-status">{{ concern.status }}</span>
+                    <small>{{ concern.created_at|date:"M d, Y" }}</small>
+                </div>
+                <ion-icon name="chevron-forward-outline" class="row-arrow"></ion-icon>
+            </div>
+            {% empty %}
+            <p style="padding: 15px; color: var(--text-light, #888);">No concerns filed yet.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ============================== -->
+    <!-- FOOTER -->
+    <!-- ============================== -->
+    <footer class="footer">
+        <span>© BarangayAssist. All rights reserved.</span>
+        <em>Serbisyo sa Mamamayan</em>
+    </footer>
+
+</div>
+{% endblock %}
