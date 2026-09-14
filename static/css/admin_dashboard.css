@@ -1,0 +1,789 @@
+/* ============================================================
+   BARANGAYASSIST ADMIN DASHBOARD
+   ============================================================ */
+
+:root {
+    --teal-950: #091812;
+    --teal-900: #0D2219;
+    --teal-800: #17382b;
+    --teal-700: #245343;
+    --teal-600: #2F6F5E;
+    --gold: #D9A441;
+    --white: #ffffff;
+    --background: #f5f7f5;
+    --card: #ffffff;
+    --text: #183229;
+    --text-light: #73827b;
+    --border: #e3e9e5;
+    --shadow: 0 10px 28px rgba(13, 34, 25, 0.06);
+}
+
+
+/* ============================================================
+   RESET
+   ============================================================ */
+
+.admin-dashboard,
+.admin-dashboard * {
+    box-sizing: border-box;
+}
+
+.admin-dashboard {
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--text);
+    font-family: "IBM Plex Sans", Arial, sans-serif;
+}
+
+.admin-dashboard button {
+    font-family: inherit;
+}
+
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 255px;
+    background: var(--teal-900);
+    color: white;
+    padding: 25px 16px;
+    z-index: 100;
+    overflow-y: auto;
+}
+
+.admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 5px 10px 30px;
+}
+
+.admin-brand img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.brand-text strong {
+    display: block;
+    font-size: 16px;
+}
+
+.brand-text span {
+    display: block;
+    color: #aabdb4;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+
+.admin-nav {
+    width: 100%;
+}
+
+.nav-title {
+    color: #769188;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 1.4px;
+    padding: 0 13px;
+    margin: 10px 0;
+}
+
+.admin-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    width: 100%;
+    padding: 12px 13px;
+    margin: 4px 0;
+    border-radius: 9px;
+    color: #b8c8c1;
+    text-decoration: none;
+    font-size: 13px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.admin-nav-link ion-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.admin-nav-link:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: white;
+}
+
+.admin-nav-link.active {
+    background: var(--gold);
+    color: var(--teal-950);
+    font-weight: 600;
+}
+
+.system-title {
+    margin-top: 30px;
+}
+
+.logout-link {
+    margin-top: 8px;
+}
+
+
+/* ============================================================
+   MAIN
+   ============================================================ */
+
+.admin-main {
+    width: calc(100% - 255px);
+    margin-left: 255px;
+    min-height: 100vh;
+}
+
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+
+.admin-topbar {
+    height: 78px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 35px;
+}
+
+.topbar-title span {
+    color: var(--gold);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+}
+
+.topbar-title h1 {
+    font-family: "Fraunces", serif;
+    font-size: 21px;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--teal-900);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-avatar ion-icon {
+    font-size: 19px;
+}
+
+.admin-user-info strong {
+    display: block;
+    font-size: 13px;
+}
+
+.admin-user-info span {
+    display: block;
+    color: var(--text-light);
+    font-size: 10px;
+    margin-top: 2px;
+}
+
+.profile-arrow {
+    color: #89978f;
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   MOBILE MENU
+   ============================================================ */
+
+.mobile-menu {
+    display: none;
+    border: 0;
+    background: transparent;
+    color: var(--teal-900);
+    font-size: 25px;
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   CONTENT
+   ============================================================ */
+
+.admin-content {
+    padding: 30px 35px;
+    max-width: 1500px;
+    margin: auto;
+}
+
+
+/* ============================================================
+   INTRO
+   ============================================================ */
+
+.admin-intro {
+    background: var(--teal-900);
+    color: white;
+    border-radius: 16px;
+    padding: 27px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.section-label {
+    color: var(--gold);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+}
+
+.admin-intro h2 {
+    font-family: "Fraunces", serif;
+    font-size: 27px;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+.admin-intro p {
+    color: #b8c8c1;
+    font-size: 13px;
+    margin-top: 7px;
+    max-width: 650px;
+}
+
+.overview-icon {
+    width: 80px;
+    height: 80px;
+    border: 1px solid rgba(217, 164, 65, 0.3);
+    border-radius: 50%;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 25px;
+    flex-shrink: 0;
+}
+
+.overview-icon ion-icon {
+    font-size: 35px;
+}
+
+
+/* ============================================================
+   STATS
+   ============================================================ */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 18px;
+}
+
+.admin-stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 19px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: var(--shadow);
+}
+
+.stat-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+    background: #edf3ef;
+    color: var(--teal-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.stat-icon ion-icon {
+    font-size: 21px;
+}
+
+.admin-stat-card span {
+    display: block;
+    color: var(--text-light);
+    font-size: 11px;
+}
+
+.admin-stat-card strong {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 25px;
+    margin-top: 4px;
+}
+
+.admin-stat-card.pending .stat-icon {
+    background: #fff5dc;
+    color: #b98518;
+}
+
+.admin-stat-card.progress .stat-icon {
+    background: #e9f1f5;
+    color: #3e7189;
+}
+
+.admin-stat-card.resolved .stat-icon {
+    background: #e8f4eb;
+    color: #43805a;
+}
+
+
+/* ============================================================
+   MANAGEMENT
+   ============================================================ */
+
+.management-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 18px;
+}
+
+.management-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease;
+}
+
+.management-card:hover {
+    transform: translateY(-2px);
+}
+
+.management-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #edf3ef;
+    color: var(--teal-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.management-icon ion-icon {
+    font-size: 21px;
+}
+
+.management-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.management-info span {
+    display: block;
+    color: var(--text-light);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+.management-info strong {
+    display: block;
+    font-size: 21px;
+    margin-top: 3px;
+}
+
+.management-info small {
+    display: block;
+    color: var(--text-light);
+    font-size: 10px;
+    margin-top: 2px;
+}
+
+.management-arrow {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: #f1f4f2;
+    color: var(--teal-600);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.management-arrow:hover {
+    background: var(--gold);
+    color: var(--teal-950);
+}
+
+
+/* ============================================================
+   CONCERNS PANEL
+   ============================================================ */
+
+.concerns-panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    margin-top: 18px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 22px 23px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.panel-header h2 {
+    font-family: "Fraunces", serif;
+    font-size: 21px;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+
+/* ============================================================
+   FILTER
+   ============================================================ */
+
+.filter-area {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--text-light);
+    padding: 7px 11px;
+    border-radius: 7px;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--teal-900);
+    color: white;
+    border-color: var(--teal-900);
+}
+
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+
+.table-header,
+.table-row {
+    display: grid;
+    grid-template-columns: 2.5fr 1.2fr 1.2fr 1fr 35px;
+    align-items: center;
+    gap: 15px;
+}
+
+.table-header {
+    padding: 12px 23px;
+    background: #fafbfa;
+    color: #85928c;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+}
+
+.table-row {
+    padding: 14px 23px;
+    border-top: 1px solid #edf0ee;
+    transition: background 0.2s ease;
+}
+
+.table-row:hover {
+    background: #fafcfb;
+}
+
+
+/* ============================================================
+   CONCERN
+   ============================================================ */
+
+.concern-name {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+}
+
+.table-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: #edf3ef;
+    color: var(--teal-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.table-icon ion-icon {
+    font-size: 17px;
+}
+
+.concern-text {
+    min-width: 0;
+}
+
+.concern-name strong {
+    display: block;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.concern-name small {
+    display: block;
+    color: var(--text-light);
+    font-size: 10px;
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* ============================================================
+   CATEGORY
+   ============================================================ */
+
+.category {
+    width: max-content;
+    max-width: 100%;
+    color: var(--teal-700);
+    background: #edf3ef;
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-size: 9px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.status {
+    width: max-content;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.pending-status {
+    background: #fff3d6;
+    color: #a8730b;
+}
+
+.in-progress-status {
+    background: #e6f0f5;
+    color: #3c7187;
+}
+
+.resolved-status {
+    background: #e5f3e8;
+    color: #3d7a51;
+}
+
+
+/* ============================================================
+   DATE
+   ============================================================ */
+
+.date {
+    color: var(--text-light);
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   ROW ACTION
+   ============================================================ */
+
+.row-action {
+    border: 0;
+    background: transparent;
+    color: #89978f;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.row-action:hover {
+    color: var(--gold);
+}
+
+
+/* ============================================================
+   EMPTY
+   ============================================================ */
+
+.empty-state {
+    text-align: center;
+    padding: 45px 20px;
+}
+
+.empty-state ion-icon {
+    font-size: 38px;
+    color: #aab6b0;
+}
+
+.empty-state h3 {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.empty-state p {
+    color: var(--text-light);
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.admin-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 25px 3px 5px;
+    color: #87948e;
+    font-size: 10px;
+}
+
+.admin-footer em {
+    color: var(--teal-600);
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1100px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .management-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 800px) {
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+    }
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+    .admin-main {
+        width: 100%;
+        margin-left: 0;
+    }
+    .mobile-menu {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .admin-topbar {
+        padding: 0 20px;
+        gap: 15px;
+    }
+    .topbar-title {
+        flex: 1;
+    }
+    .admin-content {
+        padding: 22px 18px;
+    }
+    .admin-user-info,
+    .profile-arrow {
+        display: none;
+    }
+    .table-header {
+        display: none;
+    }
+    .table-row {
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+    }
+    .category,
+    .date {
+        display: none;
+    }
+    .panel-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 550px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .admin-intro {
+        padding: 22px;
+    }
+    .admin-intro h2 {
+        font-size: 22px;
+    }
+    .overview-icon {
+        display: none;
+    }
+    .admin-footer {
+        flex-direction: column;
+        gap: 7px;
+    }
+}

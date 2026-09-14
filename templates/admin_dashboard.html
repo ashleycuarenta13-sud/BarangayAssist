@@ -1,0 +1,683 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - BarangayAssist{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        <div class="admin-brand">
+
+            <img
+                src="{{ url_for('static', filename='images/barangayassist_logo.png') }}"
+                alt="BarangayAssist Logo"
+            >
+
+            <div class="brand-text">
+                <strong>BarangayAssist</strong>
+                <span>Administration</span>
+            </div>
+
+        </div>
+
+
+        <nav class="admin-nav">
+
+            <p class="nav-title">
+                ADMINISTRATION
+            </p>
+
+
+            <a href="{{ url_for('admin_dashboard') }}"
+               class="admin-nav-link active">
+
+                <ion-icon name="grid-outline"></ion-icon>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="#"
+               class="admin-nav-link">
+
+                <ion-icon name="document-text-outline"></ion-icon>
+
+                <span>All Concerns</span>
+
+            </a>
+
+
+            <a href="#"
+               class="admin-nav-link">
+
+                <ion-icon name="people-outline"></ion-icon>
+
+                <span>Users</span>
+
+            </a>
+
+
+            <a href="#"
+               class="admin-nav-link">
+
+                <ion-icon name="person-outline"></ion-icon>
+
+                <span>Barangay Staff</span>
+
+            </a>
+
+
+            <a href="#"
+               class="admin-nav-link">
+
+                <ion-icon name="git-network-outline"></ion-icon>
+
+                <span>Service Routing</span>
+
+            </a>
+
+
+            <a href="#"
+               class="admin-nav-link">
+
+                <ion-icon name="bar-chart-outline"></ion-icon>
+
+                <span>Reports</span>
+
+            </a>
+
+
+            <p class="nav-title system-title">
+                SYSTEM
+            </p>
+
+
+            <a href="#"
+               class="admin-nav-link">
+
+                <ion-icon name="settings-outline"></ion-icon>
+
+                <span>Settings</span>
+
+            </a>
+
+
+            <a href="{{ url_for('logout') }}"
+               class="admin-nav-link logout-link">
+
+                <ion-icon name="log-out-outline"></ion-icon>
+
+                <span>Logout</span>
+
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="admin-main">
+
+
+        <!-- ================= TOP BAR ================= -->
+
+        <header class="admin-topbar">
+
+            <button
+                class="mobile-menu"
+                id="mobileMenu"
+                type="button">
+
+                <ion-icon name="menu-outline"></ion-icon>
+
+            </button>
+
+
+            <div class="topbar-title">
+
+                <span>ADMINISTRATION</span>
+
+                <h1>System Overview</h1>
+
+            </div>
+
+
+            <div class="admin-profile">
+
+                <div class="admin-avatar">
+
+                    <ion-icon
+                        name="shield-checkmark-outline">
+                    </ion-icon>
+
+                </div>
+
+
+                <div class="admin-user-info">
+
+                    <strong>
+                        {{ clean_name }}
+                    </strong>
+
+                    <span>
+                        Barangay Administrator
+                    </span>
+
+                </div>
+
+
+                <ion-icon
+                    name="chevron-down-outline"
+                    class="profile-arrow">
+                </ion-icon>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= CONTENT ================= -->
+
+        <div class="admin-content">
+
+
+            <!-- ================= WELCOME ================= -->
+
+            <section class="admin-intro">
+
+                <div class="intro-text">
+
+                    <span class="section-label">
+                        ADMIN OVERVIEW
+                    </span>
+
+
+                    <h2>
+                        Welcome back, {{ clean_name }}.
+                    </h2>
+
+
+                    <p>
+                        Monitor community concerns, residents,
+                        and barangay operations from one central dashboard.
+                    </p>
+
+                </div>
+
+
+                <div class="overview-icon">
+
+                    <ion-icon
+                        name="business-outline">
+                    </ion-icon>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= STATISTICS ================= -->
+
+            <section class="stats-grid">
+
+
+                <div class="admin-stat-card total">
+
+                    <div class="stat-icon">
+
+                        <ion-icon
+                            name="document-text-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="stat-info">
+
+                        <span>
+                            Total Concerns
+                        </span>
+
+                        <strong>
+                            {{ total_concerns }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-stat-card pending">
+
+                    <div class="stat-icon">
+
+                        <ion-icon
+                            name="time-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="stat-info">
+
+                        <span>
+                            Pending
+                        </span>
+
+                        <strong>
+                            {{ pending_count }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-stat-card progress">
+
+                    <div class="stat-icon">
+
+                        <ion-icon
+                            name="sync-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="stat-info">
+
+                        <span>
+                            In Progress
+                        </span>
+
+                        <strong>
+                            {{ in_progress_count }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-stat-card resolved">
+
+                    <div class="stat-icon">
+
+                        <ion-icon
+                            name="checkmark-circle-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="stat-info">
+
+                        <span>
+                            Resolved
+                        </span>
+
+                        <strong>
+                            {{ resolved_count }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= MANAGEMENT ================= -->
+
+            <section class="management-grid">
+
+
+                <div class="management-card">
+
+                    <div class="management-icon">
+
+                        <ion-icon
+                            name="people-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="management-info">
+
+                        <span>
+                            RESIDENTS
+                        </span>
+
+                        <strong>
+                            {{ total_residents }}
+                        </strong>
+
+                        <small>
+                            Registered residents
+                        </small>
+
+                    </div>
+
+
+                    <button
+                        class="management-arrow"
+                        type="button">
+
+                        <ion-icon
+                            name="arrow-forward-outline">
+                        </ion-icon>
+
+                    </button>
+
+                </div>
+
+
+                <div class="management-card">
+
+                    <div class="management-icon">
+
+                        <ion-icon
+                            name="person-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="management-info">
+
+                        <span>
+                            BARANGAY STAFF
+                        </span>
+
+                        <strong>
+                            {{ total_staff }}
+                        </strong>
+
+                        <small>
+                            Staff accounts
+                        </small>
+
+                    </div>
+
+
+                    <button
+                        class="management-arrow"
+                        type="button">
+
+                        <ion-icon
+                            name="arrow-forward-outline">
+                        </ion-icon>
+
+                    </button>
+
+                </div>
+
+
+                <div class="management-card">
+
+                    <div class="management-icon">
+
+                        <ion-icon
+                            name="git-network-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="management-info">
+
+                        <span>
+                            SERVICE ROUTING
+                        </span>
+
+                        <strong>
+                            Manage
+                        </strong>
+
+                        <small>
+                            Assign concerns to offices
+                        </small>
+
+                    </div>
+
+
+                    <button
+                        class="management-arrow"
+                        type="button">
+
+                        <ion-icon
+                            name="arrow-forward-outline">
+                        </ion-icon>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= RECENT CONCERNS ================= -->
+
+            <section class="concerns-panel">
+
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            COMMUNITY ACTIVITY
+                        </span>
+
+                        <h2>
+                            Recent Concerns
+                        </h2>
+
+                    </div>
+
+
+                    <div class="filter-area">
+
+                        <button
+                            class="filter-btn active"
+                            data-filter="all"
+                            type="button">
+
+                            All
+
+                        </button>
+
+
+                        <button
+                            class="filter-btn"
+                            data-filter="Pending"
+                            type="button">
+
+                            Pending
+
+                        </button>
+
+
+                        <button
+                            class="filter-btn"
+                            data-filter="In Progress"
+                            type="button">
+
+                            In Progress
+
+                        </button>
+
+
+                        <button
+                            class="filter-btn"
+                            data-filter="Resolved"
+                            type="button">
+
+                            Resolved
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TABLE HEADER -->
+
+                <div class="table-header">
+
+                    <span>
+                        CONCERN
+                    </span>
+
+                    <span>
+                        CATEGORY
+                    </span>
+
+                    <span>
+                        STATUS
+                    </span>
+
+                    <span>
+                        DATE
+                    </span>
+
+                    <span></span>
+
+                </div>
+
+
+                <!-- TABLE ROWS -->
+
+                <div id="concernList">
+
+                    {% for concern in recent_concerns %}
+
+                    <div
+                        class="table-row"
+                        data-status="{{ concern.status }}">
+
+
+                        <div class="concern-name">
+
+                            <div class="table-icon">
+
+                                <ion-icon
+                                    name="document-text-outline">
+                                </ion-icon>
+
+                            </div>
+
+
+                            <div class="concern-text">
+
+                                <strong>
+                                    {{ concern.title }}
+                                </strong>
+
+                                <small>
+                                    {{ concern.description|truncatewords(8) }}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <span class="category">
+
+                            {{ concern.category }}
+
+                        </span>
+
+
+                        <span
+                            class="status {{ concern.status|slugify }}-status">
+
+                            {{ concern.status }}
+
+                        </span>
+
+
+                        <span class="date">
+
+                            {{ concern.created_at.strftime('%b %d, %Y') }}
+
+                        </span>
+
+
+                        <button
+                            class="row-action"
+                            type="button">
+
+                            <ion-icon
+                                name="chevron-forward-outline">
+                            </ion-icon>
+
+                        </button>
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="empty-state">
+
+                        <ion-icon
+                            name="documents-outline">
+                        </ion-icon>
+
+                        <h3>
+                            No concerns yet
+                        </h3>
+
+                        <p>
+                            Community concerns will appear here
+                            once residents submit them.
+                        </p>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= FOOTER ================= -->
+
+            <footer class="admin-footer">
+
+                <span>
+                    © BarangayAssist. All rights reserved.
+                </span>
+
+                <em>
+                    Serbisyo sa Mamamayan
+                </em>
+
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+
+{% endblock %}

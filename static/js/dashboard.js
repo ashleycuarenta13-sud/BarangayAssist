@@ -1,100 +1,21 @@
-/* =====================================================
-   BARANGAYASSIST DASHBOARD JAVASCRIPT
-   ===================================================== */
+function filterConcerns(status) {
 
+    const rows = document.querySelectorAll(".admin-concern-row");
 
-/* =====================================================
-   MOBILE SIDEBAR
-   ===================================================== */
+    rows.forEach(row => {
 
-const mobileMenu = document.getElementById("mobileMenu");
-const sidebar = document.getElementById("sidebar");
+        if (status === "all") {
 
-if (mobileMenu && sidebar) {
-
-    mobileMenu.addEventListener("click", function() {
-
-        sidebar.classList.toggle("open");
-
-    });
-
-}
-
-
-/* =====================================================
-   DARK / LIGHT MODE
-   ===================================================== */
-
-const themeToggle = document.getElementById("themeToggle");
-const themeIcon = document.getElementById("themeIcon");
-const themeText = document.getElementById("themeText");
-
-
-/* Check saved theme */
-
-const savedTheme = localStorage.getItem("barangayAssistTheme");
-
-if (savedTheme === "dark") {
-
-    document.body.classList.add("dark-mode");
-
-    if (themeIcon) {
-        themeIcon.setAttribute("name", "sunny-outline");
-    }
-
-    if (themeText) {
-        themeText.textContent = "Light Mode";
-    }
-
-}
-
-
-/* Toggle theme */
-
-if (themeToggle) {
-
-    themeToggle.addEventListener("click", function() {
-
-        document.body.classList.toggle("dark-mode");
-
-        const isDark =
-            document.body.classList.contains("dark-mode");
-
-
-        if (isDark) {
-
-            localStorage.setItem(
-                "barangayAssistTheme",
-                "dark"
-            );
-
-            if (themeIcon) {
-                themeIcon.setAttribute(
-                    "name",
-                    "sunny-outline"
-                );
-            }
-
-            if (themeText) {
-                themeText.textContent = "Light Mode";
-            }
+            row.style.display = "";
 
         } else {
 
-            localStorage.setItem(
-                "barangayAssistTheme",
-                "light"
-            );
+            const rowStatus = row.dataset.status;
 
-            if (themeIcon) {
-                themeIcon.setAttribute(
-                    "name",
-                    "moon-outline"
-                );
-            }
-
-            if (themeText) {
-                themeText.textContent = "Dark Mode";
+            if (rowStatus === status) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
             }
 
         }
@@ -104,131 +25,33 @@ if (themeToggle) {
 }
 
 
-/* =====================================================
-   FILE A CONCERN BUTTON
-   ===================================================== */
+function searchConcerns() {
 
-const fileConcernBtn =
-    document.getElementById("fileConcernBtn");
+    const searchInput =
+        document.getElementById("searchConcern");
 
-if (fileConcernBtn) {
+    const searchText =
+        searchInput.value.toLowerCase();
 
-    fileConcernBtn.addEventListener("click", function() {
-
-        alert(
-            "Concern Submission\n\n" +
-            "This will open the concern submission form."
-        );
-
-        /*
-        Later, if you already have a submission page,
-        you can use:
-
-        window.location.href = "pages/submit-concern.html";
-        */
-
-    });
-
-}
+    const rows =
+        document.querySelectorAll(".admin-concern-row");
 
 
-/* =====================================================
-   SIDEBAR SUBMIT CONCERN
-   ===================================================== */
+    rows.forEach(row => {
 
-const submitConcern =
-    document.getElementById("submitConcern");
+        const text =
+            row.textContent.toLowerCase();
 
-if (submitConcern) {
+        if (text.includes(searchText)) {
 
-    submitConcern.addEventListener("click", function(e) {
+            row.style.display = "";
 
-        e.preventDefault();
+        } else {
 
-        alert(
-            "Concern Submission\n\n" +
-            "This will open the concern submission form."
-        );
-
-    });
-
-}
-
-
-/* =====================================================
-   COMMON CONCERN BUTTONS
-   ===================================================== */
-
-const concernTypes =
-    document.querySelectorAll(".concern-type");
-
-
-concernTypes.forEach(function(button) {
-
-    button.addEventListener("click", function() {
-
-        const concernName =
-            button.querySelector("small").textContent;
-
-        alert(
-            "Selected Concern:\n\n" +
-            concernName +
-            "\n\n" +
-            "You can use this category when submitting your concern."
-        );
-
-    });
-
-});
-
-
-/* =====================================================
-   CLOSE SIDEBAR AFTER CLICK
-   ===================================================== */
-
-const navItems =
-    document.querySelectorAll(".nav-item");
-
-
-navItems.forEach(function(item) {
-
-    item.addEventListener("click", function() {
-
-        if (window.innerWidth <= 800) {
-
-            sidebar.classList.remove("open");
+            row.style.display = "none";
 
         }
 
     });
 
-});
-
-
-/* =====================================================
-   CLOSE SIDEBAR WHEN CLICKING OUTSIDE
-   ===================================================== */
-
-document.addEventListener("click", function(event) {
-
-    if (window.innerWidth > 800) {
-        return;
-    }
-
-    if (!sidebar || !mobileMenu) {
-        return;
-    }
-
-    const clickedInsideSidebar =
-        sidebar.contains(event.target);
-
-    const clickedMenu =
-        mobileMenu.contains(event.target);
-
-    if (!clickedInsideSidebar && !clickedMenu) {
-
-        sidebar.classList.remove("open");
-
-    }
-
-});
+}

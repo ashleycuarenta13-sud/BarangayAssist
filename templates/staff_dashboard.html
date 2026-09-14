@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+
+{% block title %}Staff Dashboard{% endblock %}
+
+{% block nav_dashboard %}active{% endblock %}
+{% block topnav_dashboard %}active{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-content">
+
+
+    <!-- WELCOME -->
+
+    <section class="welcome-card">
+
+        <div class="welcome-text">
+
+            <span class="section-label">
+                BARANGAY STAFF DASHBOARD
+            </span>
+
+            <h1>
+                Welcome, {{ clean_name }}!
+            </h1>
+
+            <p>
+                Review assigned community concerns and update
+                their progress.
+            </p>
+
+        </div>
+
+        <div class="barangay-image">
+
+            <img
+                src="{{ url_for('static', filename='images/barangay-hall.png') }}"
+                alt="Barangay Hall"
+            >
+
+        </div>
+
+    </section>
+
+
+    <!-- STATS -->
+
+    <section class="stats-grid">
+
+        <div class="stat-card total">
+
+            <div class="stat-icon">
+                <ion-icon name="document-text-outline"></ion-icon>
+            </div>
+
+            <div class="stat-info">
+
+                <strong>
+                    {{ total_count }}
+                </strong>
+
+                <span>
+                    Assigned Concerns
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card pending">
+
+            <div class="stat-icon">
+                <ion-icon name="time-outline"></ion-icon>
+            </div>
+
+            <div class="stat-info">
+
+                <strong>
+                    {{ pending_count }}
+                </strong>
+
+                <span>
+                    Pending
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card progress">
+
+            <div class="stat-icon">
+                <ion-icon name="settings-outline"></ion-icon>
+            </div>
+
+            <div class="stat-info">
+
+                <strong>
+                    {{ in_progress_count }}
+                </strong>
+
+                <span>
+                    In Progress
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card resolved">
+
+            <div class="stat-icon">
+                <ion-icon name="checkmark-outline"></ion-icon>
+            </div>
+
+            <div class="stat-info">
+
+                <strong>
+                    {{ resolved_count }}
+                </strong>
+
+                <span>
+                    Resolved
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CONCERNS -->
+
+    <section class="content-grid">
+
+        <div class="left-column">
+
+            <div class="recent-card">
+
+                <div class="recent-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            ASSIGNED CONCERNS
+                        </span>
+
+                        <h2>
+                            Community Concerns
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                {% for concern in concerns %}
+
+                <div class="admin-concern-row">
+
+
+                    <div class="concern-main">
+
+                        <strong>
+                            {{ concern.title }}
+                        </strong>
+
+                        <span>
+                            {{ concern.description|truncatewords(12) }}
+                        </span>
+
+                        <small>
+                            Resident:
+                            {{ concern.resident_name or 'Unknown' }}
+                        </small>
+
+                        <small>
+                            Office:
+                            {{ concern.assigned_office }}
+                        </small>
+
+                        <small>
+                            {{ concern.created_at.strftime('%b %d, %Y') }}
+                        </small>
+
+                    </div>
+
+
+                    <div class="concern-category">
+
+                        <span class="category">
+                            {{ concern.category }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="admin-controls">
+
+                        <form
+                            method="POST"
+                            action="{{ url_for('staff_update_concern', concern_id=concern.id) }}"
+                        >
+
+                            <label>
+                                Update Status
+                            </label>
+
+                            <select name="status">
+
+                                <option
+                                    value="Pending"
+                                    {% if concern.status == 'Pending' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Pending
+                                </option>
+
+                                <option
+                                    value="In Progress"
+                                    {% if concern.status == 'In Progress' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    In Progress
+                                </option>
+
+                                <option
+                                    value="Resolved"
+                                    {% if concern.status == 'Resolved' %}
+                                    selected
+                                    {% endif %}
+                                >
+                                    Resolved
+                                </option>
+
+                            </select>
+
+
+                            <button
+                                type="submit"
+                                class="save-btn"
+                            >
+                                Update Status
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <p class="empty-message">
+                    No concerns have been assigned to you yet.
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT -->
+
+        <div class="right-column">
+
+            <div class="quick-card">
+
+                <span class="section-label">
+                    SERVICE ROUTING
+                </span>
+
+                <h2>
+                    Your Role
+                </h2>
+
+                <p>
+                    You are currently registered as
+                    <strong>Barangay Staff</strong>.
+                </p>
+
+                <p>
+                    Concerns assigned to you will appear
+                    automatically on this dashboard.
+                </p>
+
+            </div>
+
+
+            <div class="quick-card">
+
+                <span class="section-label">
+                    WORKFLOW
+                </span>
+
+                <h2>
+                    Concern Process
+                </h2>
+
+                <div class="office-item">
+
+                    <ion-icon name="document-outline"></ion-icon>
+
+                    <div>
+                        <strong>
+                            Receive
+                        </strong>
+
+                        <small>
+                            View assigned concern
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="office-item">
+
+                    <ion-icon name="settings-outline"></ion-icon>
+
+                    <div>
+                        <strong>
+                            Process
+                        </strong>
+
+                        <small>
+                            Work on the concern
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="office-item">
+
+                    <ion-icon name="checkmark-circle-outline"></ion-icon>
+
+                    <div>
+                        <strong>
+                            Resolve
+                        </strong>
+
+                        <small>
+                            Mark the concern resolved
+                        </small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <footer class="footer">
+
+        <span>
+            © BarangayAssist. All rights reserved.
+        </span>
+
+        <em>
+            Serbisyo sa Mamamayan
+        </em>
+
+    </footer>
+
+</div>
+
+{% endblock %}

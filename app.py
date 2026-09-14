@@ -1,231 +1,593 @@
-#!/usr/bin/env python
-"""BarangayAssist single-file Django app."""
-import os
-import sys
-import django
-from django.conf import settings
+from flask import Flask, render_template, request, redirect, url_for, session
+import pymysql
+import pymysql.cursors
+from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__)
 
-# ---------------- 1. Settings Configuration ----------------
-if not settings.configured:
-    settings.configure(
-        DEBUG=True,
-        SECRET_KEY='barangayassist-secret-key',
-        ROOT_URLCONF=__name__,
-        ALLOWED_HOSTS=['*'],
-        LOGIN_REDIRECT_URL='dashboard',
-        LOGOUT_REDIRECT_URL='index',
-        LOGIN_URL='index',
-        INSTALLED_APPS=[
-            'django.contrib.contenttypes',
-            'django.contrib.auth',
-            'django.contrib.sessions',
-            'django.contrib.messages',
-            'django.contrib.staticfiles',
-            __name__,
-        ],
-        MIDDLEWARE=[
-            'django.middleware.security.SecurityMiddleware',
-            'django.contrib.sessions.middleware.SessionMiddleware',
-            'django.middleware.common.CommonMiddleware',
-            'django.middleware.csrf.CsrfViewMiddleware',
-            'django.contrib.auth.middleware.AuthenticationMiddleware',
-            'django.contrib.messages.middleware.MessageMiddleware',
-        ],
-        TEMPLATES=[{
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [os.path.join(BASE_DIR, 'templates')],
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.request',
-                    'django.contrib.auth.context_processors.auth',
-                    'django.contrib.messages.context_processors.messages',
-                ],
-            },
-        }],
-        STATIC_URL='/static/',
-        STATICFILES_DIRS=[os.path.join(BASE_DIR, 'static')],
-        DATABASES={
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-            }
-        }
+app.secret_key = "barangayassist-secret-key"
+
+
+# ============================================================
+# DATABASE CONFIGURATION
+# ============================================================
+
+DB_CONFIG = {
+    "host": "localhost",
+    "user": "root",
+    "password": "",
+    "database": "barangayassist",
+    "cursorclass": pymysql.cursors.DictCursor
+}
+
+
+def get_db():
+    return pymysql.connect(**DB_CONFIG)
+
+
+# ============================================================
+# DATABASE INITIALIZATION
+# ============================================================
+
+def init_db():
+
+    connection = get_db()
+
+    with connection.cursor() as cursor:
+
+        # USERS TABLE
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(150) NOT NULL,
+                email VARCHAR(150) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                purok VARCHAR(100) DEFAULT '',
+                contact VARCHAR(20) DEFAULT '',
+                role VARCHAR(20) NOT NULL DEFAULT 'resident'
+            )
+        """)
+
+        # CONCERNS TABLE
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS concerns (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(200) NOT NULL,
+                description TEXT NOT NULL,
+                category VARCHAR(100) DEFAULT 'General',
+                status VARCHAR(30) DEFAULT 'Pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        # Make sure existing users table has role column
+        cursor.execute("""
+            SHOW COLUMNS FROM users LIKE 'role'
+        """)
+
+        role_column = cursor.fetchone()
+
+        if not role_column:
+            cursor.execute("""
+                ALTER TABLE users
+                ADD COLUMN role VARCHAR(20) NOT NULL DEFAULT 'resident'
+            """)
+
+    connection.commit()
+    connection.close()
+
+
+# ============================================================
+# CREATE DEFAULT ADMIN
+# ============================================================
+
+def create_default_admin():
+
+    connection = get_db()
+
+    with connection.cursor() as cursor:
+
+        cursor.execute("""
+            SELECT id
+            FROM users
+            WHERE email = %s
+        """, ("admin@barangayassist.local",))
+
+        admin = cursor.fetchone()
+
+        if not admin:
+
+            password_hash = generate_password_hash("Admin@12345")
+
+            cursor.execute("""
+                INSERT INTO users
+                (name, email, password, purok, contact, role)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (
+                "Barangay Administrator",
+                "admin@barangayassist.local",
+                password_hash,
+                "",
+                "",
+                "admin"
+            ))
+
+            connection.commit()
+
+            print("----------------------------------------")
+            print("DEFAULT ADMIN ACCOUNT CREATED")
+            print("Email: admin@barangayassist.local")
+            print("Password: Admin@12345")
+            print("----------------------------------------")
+
+    connection.close()
+
+
+# ============================================================
+# HELPER FUNCTIONS
+# ============================================================
+
+def get_clean_name(name):
+
+    if name and '@' not in name:
+        return name.title()
+
+    if name:
+        return name.split('@')[0].replace('.', ' ').replace('_', ' ').title()
+
+    return "User"
+
+
+def admin_required(f):
+
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+
+        if "user_id" not in session:
+            return redirect(url_for("index"))
+
+        if session.get("role") != "admin":
+            return "403 - Access Denied", 403
+
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+# ============================================================
+# JINJA FILTERS
+# ============================================================
+
+@app.template_filter("truncatewords")
+def truncatewords_filter(s, count):
+
+    if not s:
+        return ""
+
+    words = s.split()
+
+    if len(words) <= int(count):
+        return s
+
+    return " ".join(words[:int(count)]) + "..."
+
+
+@app.template_filter("slugify")
+def slugify_filter(s):
+
+    if not s:
+        return ""
+
+    return s.lower().replace(" ", "-")
+
+
+# ============================================================
+# HOME PAGE
+# ============================================================
+
+@app.route("/")
+def index():
+
+    if "user_id" in session:
+
+        if session.get("role") == "admin":
+            return redirect(url_for("admin_dashboard"))
+
+        return redirect(url_for("dashboard"))
+
+    return render_template("index.html")
+
+
+# ============================================================
+# REGISTER
+# ============================================================
+
+@app.route("/register", methods=["POST"])
+def register():
+
+    name = request.form.get("name", "").strip()
+    email = request.form.get("email", "").strip()
+    password = request.form.get("password", "")
+    purok = request.form.get("purok", "").strip()
+    contact = request.form.get("contact", "").strip()
+
+    if not name or not email or not password:
+        return redirect(url_for("index"))
+
+    connection = get_db()
+
+    with connection.cursor() as cursor:
+
+        cursor.execute("""
+            SELECT id
+            FROM users
+            WHERE email = %s
+        """, (email,))
+
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            connection.close()
+            return redirect(url_for("index"))
+
+        password_hash = generate_password_hash(password)
+
+        # IMPORTANT:
+        # Every public registration is automatically a RESIDENT.
+        cursor.execute("""
+            INSERT INTO users
+            (name, email, password, purok, contact, role)
+            VALUES (%s, %s, %s, %s, %s, 'resident')
+        """, (
+            name,
+            email,
+            password_hash,
+            purok,
+            contact
+        ))
+
+        connection.commit()
+
+        cursor.execute("""
+            SELECT *
+            FROM users
+            WHERE email = %s
+        """, (email,))
+
+        user = cursor.fetchone()
+
+    connection.close()
+
+    session["user_id"] = user["id"]
+    session["user_name"] = user["name"]
+    session["role"] = user["role"]
+
+    return redirect(url_for("dashboard"))
+
+
+# ============================================================
+# LOGIN
+# ============================================================
+
+@app.route("/login", methods=["POST"])
+def login():
+
+    email = request.form.get("email", "").strip()
+
+    if not email:
+        email = request.form.get("username", "").strip()
+
+    password = request.form.get("password", "")
+
+    connection = get_db()
+
+    with connection.cursor() as cursor:
+
+        cursor.execute("""
+            SELECT *
+            FROM users
+            WHERE email = %s
+        """, (email,))
+
+        user = cursor.fetchone()
+
+    connection.close()
+
+    if user and check_password_hash(user["password"], password):
+
+        session["user_id"] = user["id"]
+        session["user_name"] = user["name"]
+        session["role"] = user["role"]
+
+        # ADMIN
+        if user["role"] == "admin":
+            return redirect(url_for("admin_dashboard"))
+
+        # RESIDENT
+        return redirect(url_for("dashboard"))
+
+    return redirect(url_for("index", error=1))
+
+
+# ============================================================
+# RESIDENT DASHBOARD
+# ============================================================
+
+@app.route("/dashboard")
+def dashboard():
+
+    if "user_id" not in session:
+        return redirect(url_for("index"))
+
+    # Prevent admin from entering resident dashboard
+    if session.get("role") == "admin":
+        return redirect(url_for("admin_dashboard"))
+
+    connection = get_db()
+
+    with connection.cursor() as cursor:
+
+        cursor.execute("""
+            SELECT *
+            FROM concerns
+            ORDER BY created_at DESC
+        """)
+
+        concerns = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT COUNT(*) AS c
+            FROM concerns
+            WHERE status = 'Pending'
+        """)
+
+        pending_count = cursor.fetchone()["c"]
+
+        cursor.execute("""
+            SELECT COUNT(*) AS c
+            FROM concerns
+            WHERE status = 'In Progress'
+        """)
+
+        in_progress_count = cursor.fetchone()["c"]
+
+        cursor.execute("""
+            SELECT COUNT(*) AS c
+            FROM concerns
+            WHERE status = 'Resolved'
+        """)
+
+        resolved_count = cursor.fetchone()["c"]
+
+    connection.close()
+
+    return render_template(
+        "dashboard.html",
+        concerns=concerns,
+        pending_count=pending_count,
+        in_progress_count=in_progress_count,
+        resolved_count=resolved_count,
+        clean_name=get_clean_name(
+            session.get("user_name", "")
+        )
     )
 
-django.setup()
 
-# Auto-run built-in migrations
-from django.core.management import call_command
-try:
-    call_command('migrate', run_syncdb=True, verbosity=0)
-except Exception:
-    pass
+# ============================================================
+# SUBMIT CONCERN
+# ============================================================
 
-# ---------------- 2. Django Imports & User Customization ----------------
-from django.db import models, connection
-from django import forms
-from django.views import View
-from django.shortcuts import render, redirect
-from django.urls import path
-from django.contrib.auth import logout, login, authenticate
-from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.management import execute_from_command_line
-from django.conf.urls.static import static
+@app.route("/submit_concern", methods=["GET", "POST"])
+def submit_concern():
 
-# Helper method to retrieve clean Full Name
-def get_clean_name(self):
-    full_name = f"{self.first_name} {self.last_name}".strip()
-    if full_name and '@' not in full_name:
-        return full_name.title()
-    
-    clean_handle = self.username.split('@')[0].replace('.', ' ').replace('_', ' ')
-    return clean_handle.title()
+    if "user_id" not in session:
+        return redirect(url_for("index"))
 
-User.add_to_class('get_clean_name', get_clean_name)
+    if session.get("role") == "admin":
+        return redirect(url_for("admin_dashboard"))
 
-# Helper function to fix names and assign Last Name in DB
-def fix_user_db_name(user):
-    if user:
-        # Direct fix para sa kasamtangan nga Ashley account
-        if 'ashley' in user.username.lower() and not user.last_name:
-            user.first_name = "Ashley"
-            user.last_name = "Cuarenta"
-            user.save()
-            return
+    if request.method == "POST":
 
-        if not user.first_name or '@' in user.first_name:
-            clean_handle = user.username.split('@')[0].replace('.', ' ').replace('_', ' ')
-            parts = clean_handle.split(' ', 1)
-            user.first_name = parts[0].title()
-            user.last_name = parts[1].title() if len(parts) > 1 else ''
-            user.save()
+        title = request.form.get("title", "").strip()
 
-# ---------------- 3. Models ----------------
-class Concern(models.Model):
-    STATUS_CHOICES = [
-        ('Pending', 'Pending'),
-        ('In Progress', 'In Progress'),
-        ('Resolved', 'Resolved'),
-    ]
-    
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    category = models.CharField(max_length=100, default='General')
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
-    created_at = models.DateTimeField(auto_now_add=True)
+        description = request.form.get(
+            "description",
+            ""
+        ).strip()
 
-    class Meta:
-        app_label = '__main__'
+        category = request.form.get(
+            "category",
+            "General"
+        ).strip()
 
-    def __str__(self):
-        return str(self.title)
-
-try:
-    with connection.schema_editor() as schema_editor:
-        schema_editor.create_model(Concern)
-except Exception:
-    pass
-
-# ---------------- 4. Forms ----------------
-class ConcernForm(forms.ModelForm):
-    class Meta:
-        model = Concern
-        fields = ['title', 'description', 'category']
-
-# ---------------- 5. Views ----------------
-class IndexView(View):
-    def get(self, request):
-        if request.user.is_authenticated:
-            return redirect('dashboard')
-        return render(request, 'index.html')
-
-class LoginView(View):
-    def get(self, request):
-        if request.user.is_authenticated:
-            return redirect('dashboard')
-        return render(request, 'index.html')
-
-    def post(self, request):
-        u = request.POST.get('username') or request.POST.get('email') or request.POST.get('loginEmail')
-        p = request.POST.get('password') or request.POST.get('loginPassword')
-        user = authenticate(request, username=u, password=p)
-        if user is not None:
-            fix_user_db_name(user)
-            login(request, user)
-            return redirect('dashboard')
-        return redirect('index')
-
-class RegisterView(View):
-    def post(self, request):
-        name = request.POST.get('name', '').strip()
-        email = request.POST.get('email', '').strip()
-        password = request.POST.get('password', '')
-        
-        if email and password and not User.objects.filter(username=email).exists():
-            if not name or '@' in name:
-                name = email.split('@')[0].replace('.', ' ').replace('_', ' ')
-            
-            name_parts = name.split(' ', 1)
-            first_name = name_parts[0].title() if name_parts else ''
-            last_name = name_parts[1].title() if len(name_parts) > 1 else ''
-
-            user = User.objects.create_user(
-                username=email,
-                email=email,
-                password=password,
-                first_name=first_name,
-                last_name=last_name
+        if not title or not description:
+            return redirect(
+                url_for("submit_concern")
             )
-            user.save()
-            login(request, user)
-            return redirect('dashboard')
-            
-        return redirect('index')
 
-class DashboardView(LoginRequiredMixin, View):
-    login_url = 'index'
+        connection = get_db()
 
-    def get(self, request):
-        fix_user_db_name(request.user)
-        concerns = Concern.objects.all().order_by('-created_at')
-        context = {
-            'concerns': concerns,
-            'pending_count': concerns.filter(status='Pending').count(),
-            'in_progress_count': concerns.filter(status='In Progress').count(),
-            'resolved_count': concerns.filter(status='Resolved').count(),
-        }
-        return render(request, 'dashboard.html', context)
+        with connection.cursor() as cursor:
 
-class SubmitConcernView(View):
-    def get(self, request):
-        form = ConcernForm()
-        return render(request, 'submit_concern.html', {'form': form})
+            cursor.execute("""
+                INSERT INTO concerns
+                (title, description, category, status)
+                VALUES (%s, %s, %s, 'Pending')
+            """, (
+                title,
+                description,
+                category
+            ))
 
-    def post(self, request):
-        form = ConcernForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('dashboard')
-        return render(request, 'submit_concern.html', {'form': form})
+        connection.commit()
+        connection.close()
 
-def logout_view(request):
-    logout(request)
-    return redirect('index')
+        return redirect(url_for("dashboard"))
 
-# ---------------- 6. URLs ----------------
-urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('register/', RegisterView.as_view(), name='register'),
-    path('dashboard/', DashboardView.as_view(), name='dashboard'),
-    path('submit_concern/', SubmitConcernView.as_view(), name='submit_concern'),
-    path('logout/', logout_view, name='logout'),
-] + static(settings.STATIC_URL, document_root=os.path.join(BASE_DIR, 'static'))
+    return render_template(
+        "submit_concern.html",
+        clean_name=get_clean_name(
+            session.get("user_name", "")
+        )
+    )
 
-if __name__ == '__main__':
-    execute_from_command_line(sys.argv)
+
+# ============================================================
+# ADMIN DASHBOARD
+# ============================================================
+
+@app.route("/admin/dashboard")
+@admin_required
+def admin_dashboard():
+
+    connection = get_db()
+
+    with connection.cursor() as cursor:
+
+        # --------------------------------------------
+        # TOTAL USERS
+        # --------------------------------------------
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM users
+        """)
+
+        total_users = cursor.fetchone()["total"]
+
+
+        # --------------------------------------------
+        # TOTAL RESIDENTS
+        # --------------------------------------------
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM users
+            WHERE role = 'resident'
+        """)
+
+        total_residents = cursor.fetchone()["total"]
+
+
+        # --------------------------------------------
+        # TOTAL STAFF
+        # --------------------------------------------
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM users
+            WHERE role = 'staff'
+        """)
+
+        total_staff = cursor.fetchone()["total"]
+
+
+        # --------------------------------------------
+        # TOTAL CONCERNS
+        # --------------------------------------------
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM concerns
+        """)
+
+        total_concerns = cursor.fetchone()["total"]
+
+
+        # --------------------------------------------
+        # PENDING
+        # --------------------------------------------
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM concerns
+            WHERE status = 'Pending'
+        """)
+
+        pending_count = cursor.fetchone()["total"]
+
+
+        # --------------------------------------------
+        # IN PROGRESS
+        # --------------------------------------------
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM concerns
+            WHERE status = 'In Progress'
+        """)
+
+        in_progress_count = cursor.fetchone()["total"]
+
+
+        # --------------------------------------------
+        # RESOLVED
+        # --------------------------------------------
+
+        cursor.execute("""
+            SELECT COUNT(*) AS total
+            FROM concerns
+            WHERE status = 'Resolved'
+        """)
+
+        resolved_count = cursor.fetchone()["total"]
+
+
+        # --------------------------------------------
+        # RECENT CONCERNS
+        # --------------------------------------------
+
+        cursor.execute("""
+            SELECT *
+            FROM concerns
+            ORDER BY created_at DESC
+            LIMIT 8
+        """)
+
+        recent_concerns = cursor.fetchall()
+
+    connection.close()
+
+    return render_template(
+        "admin_dashboard.html",
+        total_users=total_users,
+        total_residents=total_residents,
+        total_staff=total_staff,
+        total_concerns=total_concerns,
+        pending_count=pending_count,
+        in_progress_count=in_progress_count,
+        resolved_count=resolved_count,
+        recent_concerns=recent_concerns,
+        clean_name=get_clean_name(
+            session.get(
+                "user_name",
+                "Administrator"
+            )
+        )
+    )
+
+
+# ============================================================
+# LOGOUT
+# ============================================================
+
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect(url_for("index"))
+
+
+# ============================================================
+# RUN APPLICATION
+# ============================================================
+
+if __name__ == "__main__":
+
+    init_db()
+
+    create_default_admin()
+
+    app.run(debug=True)

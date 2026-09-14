@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Submit Concern - BarangayAssist{% endblock %}
+{% block nav_submit %}active{% endblock %}
+{% block topnav_submit %}active{% endblock %}
+{% block nav_dashboard %}{% endblock %}
+{% block topnav_dashboard %}{% endblock %}
+
+{% block content %}
+<div class="dashboard-content">
+
+    <section class="welcome-card">
+        <div class="welcome-text">
+            <span class="section-label">QUICK ACTION</span>
+            <h1>Submit a Concern</h1>
+            <p>Tell us what's happening. We'll route it to the appropriate office or department.</p>
+        </div>
+    </section>
+
+    <section class="content-grid">
+        <div class="left-column">
+            <div class="submit-card">
+                <form action="{{ url_for('submit_concern') }}" method="POST" novalidate>
+                    <div class="input-box" id="box-title">
+                        <span class="icon"><ion-icon name="document-text-outline"></ion-icon></span>
+                        <input type="text" id="title" name="title" required>
+                        <label>Concern Title</label>
+                    </div>
+
+                    <div class="input-box" id="box-category">
+                        <span class="icon"><ion-icon name="pricetag-outline"></ion-icon></span>
+                        <select id="category" name="category">
+                            <option value="General">General</option>
+                            <option value="Street Lights">Street Lights</option>
+                            <option value="Waste Collection">Waste Collection</option>
+                            <option value="Water Supply">Water Supply</option>
+                            <option value="Roads & Drainage">Roads & Drainage</option>
+                            <option value="Community Services">Community Services</option>
+                        </select>
+                        <label>Category</label>
+                    </div>
+
+                    <div class="input-box" id="box-description" style="height: auto;">
+                        <textarea id="description" name="description" rows="5" required
+                            style="width: 100%; padding: 15px 0 5px; border: none; outline: none; background: transparent; resize: vertical;"></textarea>
+                        <label>Description</label>
+                    </div>
+
+                    <button type="submit" class="btn primary-btn" style="margin-top: 20px;">
+                        <ion-icon name="send-outline"></ion-icon> Submit Concern
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <span>© BarangayAssist. All rights reserved.</span>
+        <em>Serbisyo sa Mamamayan</em>
+    </footer>
+
+</div>
+{% endblock %}
