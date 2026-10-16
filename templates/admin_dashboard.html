@@ -16,17 +16,11 @@
     <aside class="admin-sidebar" id="adminSidebar">
 
         <div class="admin-brand">
-
             <img
                 src="{{ url_for('static', filename='images/barangayassist_logo.png') }}"
-                alt="BarangayAssist Logo"
+                alt="BarangayAssist Community Concern Portal"
+                class="dashboard-logo"
             >
-
-            <div class="brand-text">
-                <strong>BarangayAssist</strong>
-                <span>Administration</span>
-            </div>
-
         </div>
 
 
@@ -110,6 +104,16 @@
                 <span>Settings</span>
 
             </a>
+
+            <button type="button"
+                    class="admin-nav-link admin-theme-toggle"
+                    id="adminDarkModeBtn">
+
+                <ion-icon name="moon-outline" id="adminDarkModeIcon"></ion-icon>
+
+                <span id="adminDarkModeText">Dark Mode</span>
+
+            </button>
 
 
             <a href="{{ url_for('logout') }}"
@@ -552,6 +556,10 @@
                     </span>
 
                     <span>
+                        ASSIGNED STAFF
+                    </span>
+
+                    <span>
                         DATE
                     </span>
 
@@ -610,6 +618,26 @@
                             {{ concern.status }}
 
                         </span>
+
+
+                        <form
+                            class="assignment-form"
+                            method="POST"
+                            action="{{ url_for('admin_assign_concern', concern_id=concern.id) }}">
+
+                            <select name="assigned_staff_id" aria-label="Assign staff">
+                                <option value="">Unassigned</option>
+                                {% for staff in staff_users %}
+                                <option
+                                    value="{{ staff.id }}"
+                                    {% if concern.assigned_staff_id == staff.id %}selected{% endif %}>
+                                    {{ staff.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+
+                            <button type="submit" class="assign-btn">Assign</button>
+                        </form>
 
 
                         <span class="date">

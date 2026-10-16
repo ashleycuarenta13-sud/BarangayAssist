@@ -41,97 +41,211 @@
         </div>
         <div class="hero-box">
             <div class="hero-content">
-                <div class="file-tab">Case Intake - Open</div>
-                <h1>File a concern. <br>Watch it get <em>routed</em>, not filed away.</h1>
-                <p class="lede">BarangayAssist reads what a resident actually writes, tags it by office and urgency, and sends it straight to the desk that handles it - no more guessing window to line up at.</p>
+                <h1>Report a concern. <br>Stay updated.</h1>
+                <p class="lede">Have a concern in your barangay? Submit the details online and check its status from your dashboard.</p>
                 <ul class="hero-ledger">
-                    <li><span class="code">01 —</span> One form, any concern, any office</li>
-                    <li><span class="code">02 —</span> Automatic classification and routing</li>
-                    <li><span class="code">03 —</span> Tracked from submission to resolution</li>
+                    <li><span class="code">01 —</span> Submit a concern online</li>
+                    <li><span class="code">02 —</span> Choose the concern category</li>
+                    <li><span class="code">03 —</span> Check updates from your dashboard</li>
                 </ul>
-                <button class="hero-btn" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">See Services →</button>
+                <button class="hero-btn" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Learn how it works →</button>
             </div>
             <div class="hero-visual">
-                <div class="stamp">RECEIVED<br>&amp; ROUTED</div>
+                <div class="stamp">SUBMITTED<br>&amp; TRACKED</div>
                 <div class="ticket">
-                    <span class="t-code">BRGY-2026-00142</span>
-                    <p class="t-qoute">"Walang street light sa Purok 3 - delikado na sa gabi."</p>
-                    <div class="t-row"><span>Routed → Infrastructure</span><span class="t-status">● In progress</span></div>
+                    <span class="t-code">EXAMPLE CONCERN</span>
+                    <p class="t-qoute">"The street light near Purok 3 is not working."</p>
+                    <div class="t-row"><span>Concern status</span><span class="t-status">● In progress</span></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="about" class="section">
-        <div class="section-inner">
-            <div class="section-tag">Who We're For</div>
-            <h2>About BarangayAssist</h2>
-            <p class="lead">A single intake window that reads what residents actually write, and gets it to the right office without extra paperwork.</p>
-            <div class="about-cards">
-                <div class="about-card">
-                    <span class="file-code">FILE / 01</span>
-                    <h3>One Intake Window</h3>
-                    <p>Residents describe their concern in their own words - no need to know which office handles it.</p>
-                </div>
-                <div class="about-card">
-                    <span class="file-code">FILE / 02</span>
-                    <h3>AI-Assisted Routing</h3>
-                    <p>Natural language processing tags each and sends it to the correct barangay desk automatically.</p>
-                </div>
-                <div class="about-card">
-                    <span class="file-code">FILE / 03</span>
-                    <h3>Transparent Tracking</h3>
-                    <p>Residents see the status of their concern at every stage, from filing to resolution.</p>
-                </div>
+    
+    <section id="about" class="section ba-about">
+        <div class="section-inner ba-inner">
+            <div class="ba-section-heading">
+                <span class="ba-eyebrow">ABOUT BARANGAYASSIST</span>
+                <h2>A simpler way to report community concerns.</h2>
+                <p>
+                    BarangayAssist gives residents an online place to submit
+                    concerns and check their progress without having to visit
+                    the barangay hall just to make an initial report.
+                </p>
+            </div>
+
+            <div class="ba-about-grid">
+                <article class="ba-about-card">
+                    <span class="ba-card-number">01</span>
+                    <div class="ba-card-icon">
+                        <ion-icon name="document-text-outline"></ion-icon>
+                    </div>
+                    <h3>Submit a Concern</h3>
+                    <p>
+                        Describe the issue you want the barangay to know about
+                        using the concern submission form.
+                    </p>
+                </article>
+
+                <article class="ba-about-card">
+                    <span class="ba-card-number">02</span>
+                    <div class="ba-card-icon">
+                        <ion-icon name="git-network-outline"></ion-icon>
+                    </div>
+                    <h3>Organized Reports</h3>
+                    <p>
+                        Concern details can help staff review the report
+                        and determine which office should handle it.
+                    </p>
+                </article>
+
+                <article class="ba-about-card">
+                    <span class="ba-card-number">03</span>
+                    <div class="ba-card-icon">
+                        <ion-icon name="time-outline"></ion-icon>
+                    </div>
+                    <h3>Check Progress</h3>
+                    <p>
+                        Use the available status information to see
+                        the progress of a concern you submitted.
+                    </p>
+                </article>
             </div>
         </div>
     </section>
 
-    <section id="services" class="section">
-        <div class="section-inner">
-            <div class="section-tag">What It Does</div>
-            <h2>Our Services</h2>
-            <p class="lead">Everything needed to file, classify, and follow up on a community concern.</p>
-            <div class="services-grid">
-                <div class="service-item">
-                    <span class="svc-code">SVC-01 / INTAKE</span>
+
+    
+    <section id="services" class="section ba-services">
+        <div class="section-inner ba-inner">
+            <div class="ba-section-heading ba-centered">
+                <span class="ba-eyebrow">OUR SERVICES</span>
+                <h2>What you can do with BarangayAssist.</h2>
+                <p>
+                    The main tools residents can use to report concerns
+                    and follow up on submitted reports.
+                </p>
+            </div>
+
+            <div class="ba-services-grid">
+                <article class="ba-service-card">
+                    <div class="ba-service-top">
+                        <div class="ba-service-icon">
+                            <ion-icon name="create-outline"></ion-icon>
+                        </div>
+                        <span>01</span>
+                    </div>
                     <h3>Concern Submission</h3>
-                    <p>A short, guided form for reporting any issue - infrastructure, peace, and order, health, or sanitation.</p>
+                    <p>
+                        Fill out the form with the details of a community
+                        issue you want to report.
+                    </p>
+                    <a href="{{ url_for('submit_concern') }}" class="ba-service-link">
+                        Submit a concern
+                        <ion-icon name="arrow-forward-outline"></ion-icon>
+                    </a>
+                </article>
+
+                <article class="ba-service-card">
+                    <div class="ba-service-top">
+                        <div class="ba-service-icon">
+                            <ion-icon name="clipboard-outline"></ion-icon>
+                        </div>
+                        <span>02</span>
+                    </div>
+                    <h3>Report Review</h3>
+                    <p>
+                        Submitted reports can be reviewed by the staff
+                        responsible for handling community concerns.
+                    </p>
+                    <span class="ba-service-note">For residents and staff</span>
+                </article>
+
+                <article class="ba-service-card">
+                    <div class="ba-service-top">
+                        <div class="ba-service-icon">
+                            <ion-icon name="analytics-outline"></ion-icon>
+                        </div>
+                        <span>03</span>
+                    </div>
+                    <h3>Status Monitoring</h3>
+                    <p>
+                        Check the available status of your submitted
+                        concern through your account.
+                    </p>
+                    <a href="{{ url_for('dashboard') if session.get('user_id') else '#home' }}"
+                    class="ba-service-link">
+                        View your account
+                        <ion-icon name="arrow-forward-outline"></ion-icon>
+                    </a>
+                </article>
+
+                <article class="ba-service-card">
+                    <div class="ba-service-top">
+                        <div class="ba-service-icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </div>
+                        <span>04</span>
+                    </div>
+                    <h3>Staff Coordination</h3>
+                    <p>
+                        Authorized staff can use the system to review
+                        and manage reports according to their access.
+                    </p>
+                    <span class="ba-service-note">Staff access required</span>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    
+    <section id="contact" class="section ba-contact">
+        <div class="section-inner ba-inner">
+            <div class="ba-contact-panel">
+                <div class="ba-contact-copy">
+                    <span class="ba-eyebrow">CONTACT</span>
+                    <h2>Need help with a concern?</h2>
+                    <p>
+                        If you need assistance submitting a report or
+                        following up on an issue, contact your barangay
+                        office through its official communication channels.
+                    </p>
+                    <a href="#home" class="ba-contact-button">
+                        Back to home
+                        <ion-icon name="arrow-forward-outline"></ion-icon>
+                    </a>
                 </div>
-                <div class="service-item">
-                    <span class="svc-code">SVC-02 / ROUTE</span>
-                    <h3>Smart classification</h3>
-                    <p>NLP reads the concern text and tags it by category and urgency before it reaches staff.</p>
-                </div>
-                <div class="service-item">
-                    <span class="svc-code">SVC-03 / TRACK</span>
-                    <h3>Status Tracking</h3>
-                    <p>Residents follow their concern's progress from received to in-progress to resolved.</p>
-                </div>
-                <div class="service-item">
-                    <span class="svc-code">SVC-04 / CLOSE</span>
-                    <h3>Feedback &amp; Closure</h3>
-                    <p>Residents confirm resolution and leave feedback once the concerned office responds.</p>
+
+                <div class="ba-contact-details">
+                    <div class="ba-contact-item">
+                        <div class="ba-contact-icon">
+                            <ion-icon name="business-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <span>WHERE TO ASK</span>
+                            <h3>Barangay Office</h3>
+                            <p>Contact your local barangay office for assistance.</p>
+                        </div>
+                    </div>
+
+                    <div class="ba-contact-item">
+                        <div class="ba-contact-icon">
+                            <ion-icon name="document-text-outline"></ion-icon>
+                        </div>
+                        <div>
+                            <span>BEFORE YOU FOLLOW UP</span>
+                            <h3>Prepare your report details</h3>
+                            <p>
+                                Keep any reference number or status information
+                                available, if one was provided.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="contact" class="section">
-        <div class="section-inner">
-            <div class="section-tag">Get in Touch</div>
-            <h2>Contact the Barangay Hall</h2>
-            <p class="lead">For concerns that need in-person follow-up, reach the barangay hall directly.</p>
-            <div class="contact-box">
-                <div class="contact-row">
-                    <ion-icon name="mail"></ion-icon><span>Email: <a href="mailto:barangayassist@gmail.com">barangayassist@gmail.com</a></span></div>
-                <div class="contact-row">
-                    <ion-icon name="call"></ion-icon><span>Phone: 0930 801 9394</span></div>
-                <div class="contact-row">
-                    <ion-icon name="location"></ion-icon><span>Barangay Hall, La Union, Cabadbaran City, Agusan del Norte</span></div>
-            </div>
-        </div>
-    </section>
 
     <div class="wrapper" id="wrapper">
         <span class="icon-close" id="iconClose"><ion-icon name="close"></ion-icon></span>
@@ -144,7 +258,7 @@
             <form id="loginForm" action="{{ url_for('login') }}" method="POST" novalidate>
                 <div class="input-box" id="box-loginEmail">
                     <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                    <input type="email" id="loginEmail" name="email" autocomplete="username" required>
+                    <input type="email" id="loginEmail" name="email" autocomplete="username" placeholder=" " required>
                     <label>Email Address</label>
                 </div>
                 <div class="err-msg" id="err-loginEmail">Enter the email address you registered with.</div>
@@ -152,7 +266,7 @@
                 <div class="input-box" id="box-loginPassword">
                     <button type="button" class="toggle-vis" onclick="toggleVis('loginPassword')" aria-label="Show password"><ion-icon name="eye" id="eye-loginPassword"></ion-icon></button>
                     <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-                    <input type="password" id="loginPassword" name="password" autocomplete="current-password" required>
+                    <input type="password" id="loginPassword" name="password" autocomplete="current-password" placeholder=" " required>
                     <label>Password</label>
                 </div>
                 <div class="err-msg" id="err-loginPassword">Password cannot be blank.</div>
@@ -178,28 +292,28 @@
             <form id="registerForm" action="{{ url_for('register') }}" method="POST" novalidate>
                 <div class="input-box" id="box-regName">
                     <span class="icon"><ion-icon name="person"></ion-icon></span>
-                    <input type="text" id="regName" name="name" autocomplete="name">
+                    <input type="text" id="regName" name="name" autocomplete="name" placeholder=" ">
                     <label>Full Name</label>
                 </div>
                 <div class="err-msg" id="err-regName">Full name is required.</div>
 
                 <div class="input-box" id="box-regPurok">
                     <span class="icon"><ion-icon name="location"></ion-icon></span>
-                    <input type="text" id="regPurok" name="purok">
+                    <input type="text" id="regPurok" name="purok" placeholder=" ">
                     <label>Purok / Zone</label>
                 </div>
                 <div class="err-msg" id="err-regPurok">Required so we can route your concern.</div>
 
                 <div class="input-box" id="box-regContact">
                     <span class="icon"><ion-icon name="call"></ion-icon></span>
-                    <input type="tel" id="regContact" name="contact" autocomplete="tel">
+                    <input type="tel" id="regContact" name="contact" autocomplete="tel" placeholder=" ">
                     <label>Contact Number</label>
                 </div>
                 <div class="err-msg" id="err-regContact">Enter an 11-digit mobile number.</div>
 
                 <div class="input-box" id="box-regEmail">
                     <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                    <input type="email" id="regEmail" name="email" autocomplete="email">
+                    <input type="email" id="regEmail" name="email" autocomplete="email" placeholder=" ">
                     <label>Email Address</label>
                 </div>
                 <div class="err-msg" id="err-regEmail">Enter a valid email address.</div>
@@ -207,7 +321,7 @@
                 <div class="input-box" id="box-regPassword">
                     <button type="button" class="toggle-vis" onclick="toggleVis('regPassword')" aria-label="Show password"><ion-icon name="eye" id="eye-regPassword"></ion-icon></button>
                     <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-                    <input type="password" id="regPassword" name="password" autocomplete="new-password">
+                    <input type="password" id="regPassword" name="password" autocomplete="new-password" placeholder=" ">
                     <label>Password</label>
                 </div>
                 <div class="meter">
@@ -218,7 +332,7 @@
                 <div class="input-box" id="box-regConfirm">
                     <button type="button" class="toggle-vis" onclick="toggleVis('regConfirm')" aria-label="Show password"><ion-icon name="eye" id="eye-regConfirm"></ion-icon></button>
                     <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-                    <input type="password" id="regConfirm" autocomplete="new-password">
+                    <input type="password" id="regConfirm" autocomplete="new-password" placeholder=" ">
                     <label>Confirm Password</label>
                 </div>
                 <div class="err-msg" id="err-regConfirm">Passwords do not match.</div>

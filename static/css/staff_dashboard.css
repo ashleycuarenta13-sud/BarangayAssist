@@ -1,0 +1,258 @@
+/* =====================================================
+   BARANGAYASSIST STAFF DASHBOARD
+   Dedicated staff view styling layered on the shared dashboard.
+   ===================================================== */
+
+.staff-dashboard-page {
+    background: #f4f6f5;
+}
+
+.staff-dashboard-page .welcome-card {
+    border-left: 4px solid #0b654b;
+}
+
+.staff-dashboard-page .recent-card {
+    min-height: 420px;
+}
+
+.staff-dashboard-page .recent-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+
+.staff-dashboard-page .admin-concern-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 150px 190px;
+    gap: 20px;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid #dfe7e2;
+}
+
+.staff-dashboard-page .concern-main {
+    min-width: 0;
+}
+
+.staff-dashboard-page .concern-main strong,
+.staff-dashboard-page .concern-main span,
+.staff-dashboard-page .concern-main small {
+    display: block;
+}
+
+.staff-dashboard-page .concern-main strong {
+    margin-bottom: 4px;
+    color: #17352b;
+    font-size: 14px;
+}
+
+.staff-dashboard-page .concern-main span {
+    margin-bottom: 6px;
+    color: #60746a;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.staff-dashboard-page .concern-main small {
+    color: #7a8982;
+    font-size: 10px;
+    line-height: 1.45;
+}
+
+.staff-dashboard-page .concern-category .category {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    padding: 7px 9px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.staff-dashboard-page .admin-controls form {
+    display: grid;
+    gap: 7px;
+}
+
+.staff-dashboard-page .admin-controls label {
+    color: #60746a;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.staff-dashboard-page .admin-controls select {
+    width: 100%;
+    min-height: 34px;
+    padding: 6px 8px;
+    border: 1px solid #cbd9d1;
+    border-radius: 4px;
+    background: #fff;
+    color: #17352b;
+    font: inherit;
+    font-size: 11px;
+}
+
+.staff-dashboard-page .admin-controls select:focus {
+    outline: 2px solid rgba(11, 101, 75, .18);
+    border-color: #0b654b;
+}
+
+.staff-dashboard-page .save-btn {
+    min-height: 34px;
+    padding: 7px 10px;
+    border: 1px solid #0b654b;
+    border-radius: 4px;
+    background: #0b654b;
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.staff-dashboard-page .save-btn:hover {
+    background: #07513d;
+}
+
+.staff-dashboard-page .save-btn:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+.staff-dashboard-page .quick-card {
+    border-top: 3px solid #0b654b;
+}
+
+.staff-dashboard-page .quick-card h2 {
+    margin: 7px 0 12px;
+    color: #17352b;
+    font-size: 19px;
+}
+
+.staff-dashboard-page .quick-card p {
+    color: #60746a;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.staff-dashboard-page .office-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e1e8e3;
+}
+
+.staff-dashboard-page .office-item:last-child {
+    border-bottom: 0;
+}
+
+.staff-dashboard-page .office-item>ion-icon {
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    padding: 7px;
+    border-radius: 4px;
+    background: #eaf5ee;
+    color: #0b654b;
+}
+
+.staff-dashboard-page .office-item strong,
+.staff-dashboard-page .office-item small {
+    display: block;
+}
+
+.staff-dashboard-page .office-item strong {
+    color: #17352b;
+    font-size: 12px;
+}
+
+.staff-dashboard-page .office-item small {
+    margin-top: 3px;
+    color: #718078;
+    font-size: 11px;
+}
+
+.staff-dashboard-page .empty-message {
+    padding: 34px 0;
+    color: #718078;
+    text-align: center;
+    font-size: 13px;
+}
+
+body.dark-mode .staff-dashboard-page {
+    background: #101b17;
+}
+
+body.dark-mode .staff-dashboard-page .admin-concern-row {
+    border-color: #2d493d;
+}
+
+body.dark-mode .staff-dashboard-page .concern-main strong,
+body.dark-mode .staff-dashboard-page .quick-card h2,
+body.dark-mode .staff-dashboard-page .office-item strong {
+    color: #f0f6f2;
+}
+
+body.dark-mode .staff-dashboard-page .concern-main span,
+body.dark-mode .staff-dashboard-page .concern-main small,
+body.dark-mode .staff-dashboard-page .admin-controls label,
+body.dark-mode .staff-dashboard-page .quick-card p,
+body.dark-mode .staff-dashboard-page .office-item small,
+body.dark-mode .staff-dashboard-page .empty-message {
+    color: #a8bbb1;
+}
+
+body.dark-mode .staff-dashboard-page .admin-controls select {
+    border-color: #3b594b;
+    background: #182a23;
+    color: #e4efe9;
+}
+
+body.dark-mode .staff-dashboard-page .office-item {
+    border-color: #2d493d;
+}
+
+body.dark-mode .staff-dashboard-page .office-item>ion-icon {
+    background: #20382e;
+    color: #e4c05d;
+}
+
+@media (max-width: 980px) {
+    .staff-dashboard-page .admin-concern-row {
+        grid-template-columns: minmax(0, 1fr) 150px;
+    }
+    .staff-dashboard-page .admin-controls {
+        grid-column: 1 / -1;
+    }
+    .staff-dashboard-page .admin-controls form {
+        grid-template-columns: auto minmax(160px, 220px) auto;
+        align-items: center;
+    }
+}
+
+@media (max-width: 650px) {
+    .staff-dashboard-page .admin-concern-row {
+        display: block;
+    }
+    .staff-dashboard-page .concern-category,
+    .staff-dashboard-page .admin-controls {
+        margin-top: 12px;
+    }
+    .staff-dashboard-page .admin-controls form {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+}
+
+.staff-dashboard-page .admin-concern-row.status-being-edited {
+    background: #fff9e7;
+}
+
+.staff-dashboard-page .admin-concern-row.status-updating {
+    opacity: .7;
+}
+
+body.dark-mode .staff-dashboard-page .admin-concern-row.status-being-edited {
+    background: #3b3218;
+}

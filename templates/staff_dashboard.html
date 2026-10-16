@@ -6,16 +6,12 @@
 {% block topnav_dashboard %}active{% endblock %}
 
 {% block extra_css %}
-
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
-
+<link rel="stylesheet" href="{{ url_for('static', filename='css/staff_dashboard.css') }}">
 {% endblock %}
-
 
 {% block content %}
 
-<div class="dashboard-content">
+<div class="dashboard-content staff-dashboard-page">
 
 
     <!-- WELCOME -->
@@ -383,5 +379,8 @@
     </footer>
 
 </div>
+{% endblock %}
 
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/staff_dashboard.js') }}"></script>
 {% endblock %}

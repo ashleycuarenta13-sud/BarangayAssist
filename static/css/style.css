@@ -712,16 +712,15 @@ button {
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 100%;
-    max-width: 470px;
+    width: min(100%, 490px);
     max-height: 90vh;
-    padding: 38px;
+    padding: 32px 28px 26px;
     overflow-y: auto;
-    border-radius: 22px;
-    background: rgba(255, 255, 255, .94);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, .95);
     color: var(--ink);
-    border: 1px solid rgba(255, 255, 255, .7);
-    box-shadow: 0 40px 90px rgba(0, 0, 0, .5), 0 10px 30px rgba(0, 0, 0, .25);
+    border: 1px solid rgba(24, 54, 44, .08);
+    box-shadow: 0 24px 80px rgba(7, 21, 17, .45), 0 10px 28px rgba(7, 21, 17, .18);
     transform: translate(-50%, -50%) scale(.96);
     opacity: 0;
     visibility: hidden;
@@ -755,6 +754,11 @@ button {
     transform: rotate(90deg);
 }
 
+.icon-close:focus-visible {
+    outline: 2px solid var(--gold-light);
+    outline-offset: 2px;
+}
+
 .form-box {
     width: 100%;
 }
@@ -772,13 +776,14 @@ button {
 .form-box h2 {
     margin-bottom: 8px;
     font-family: 'Fraunces', serif;
-    font-size: 34px;
+    font-size: clamp(30px, 2.5vw, 34px);
     font-weight: 600;
+    line-height: 1.12;
     color: var(--ink);
 }
 
 .form-subtitle {
-    margin-bottom: 28px;
+    margin-bottom: 24px;
     color: var(--ink-soft);
     font-size: 13px;
     line-height: 1.6;
@@ -792,15 +797,24 @@ button {
 .input-box {
     position: relative;
     width: 100%;
-    height: 55px;
-    margin: 17px 0 4px;
-    border-bottom: 1px solid #C9D2CC;
+    height: 58px;
+    margin: 18px 0 6px;
+    border: 1px solid #D7DED9;
+    border-radius: 12px;
+    background: rgba(13, 34, 25, .02);
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.input-box:focus-within {
+    border-color: rgba(47, 111, 94, .5);
+    box-shadow: 0 0 0 4px rgba(95, 168, 145, .12);
+    background: rgba(13, 34, 25, .03);
 }
 
 .input-box input {
     width: 100%;
     height: 100%;
-    padding: 0 48px 0 42px;
+    padding: 18px 48px 8px 42px;
     border: none;
     outline: none;
     background: transparent;
@@ -824,14 +838,15 @@ button {
 
 .input-box input:focus~label,
 .input-box input:not(:placeholder-shown)~label {
-    top: 5px;
+    top: 14px;
     font-size: 10px;
+    line-height: 1;
     color: var(--teal-600);
 }
 
 .input-box .icon {
     position: absolute;
-    left: 10px;
+    left: 12px;
     top: 50%;
     color: var(--teal-600);
     transform: translateY(-50%);
@@ -844,12 +859,20 @@ button {
 
 .toggle-vis {
     position: absolute;
-    right: 5px;
+    right: 8px;
     top: 50%;
     border: 0;
     color: var(--teal-600);
     background: transparent;
     transform: translateY(-50%);
+    border-radius: 6px;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.toggle-vis:focus-visible {
+    outline: 2px solid var(--gold-light);
+    outline-offset: 2px;
 }
 
 
@@ -913,6 +936,7 @@ button {
     display: flex;
     align-items: center;
     gap: 7px;
+    line-height: 1.5;
 }
 
 .remember-forgot input[type="checkbox"] {
@@ -932,9 +956,9 @@ button {
 
 .btn {
     width: 100%;
-    padding: 13px;
+    padding: 14px 16px;
     border: none;
-    border-radius: 9px;
+    border-radius: 12px;
     color: var(--teal-950);
     font-weight: 700;
     background: linear-gradient( 180deg, var(--gold-light), var(--gold), var(--gold-dark));
@@ -945,6 +969,11 @@ button {
 .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(184, 132, 43, .45), inset 0 1px 0 rgba(255, 255, 255, .4);
+}
+
+.btn:focus-visible {
+    outline: 3px solid rgba(95, 168, 145, .28);
+    outline-offset: 2px;
 }
 
 
@@ -985,10 +1014,10 @@ button {
 
 .privacy-note {
     margin: 18px 0;
-    padding: 13px;
+    padding: 13px 14px;
     border-left: 3px solid var(--gold);
-    border-radius: 6px;
-    background: #F5F7F5;
+    border-radius: 10px;
+    background: rgba(217, 164, 65, .06);
     color: var(--ink-soft);
     font-size: 11px;
     line-height: 1.6;
@@ -1156,15 +1185,375 @@ button {
     }
     .wrapper {
         width: calc(100% - 30px);
-        padding: 30px 23px;
+        padding: 26px 18px 20px;
         max-height: 88vh;
     }
     .form-box h2 {
         font-size: 30px;
+    }
+    .input-box {
+        height: 56px;
     }
     .footer {
         flex-direction: column;
         align-items: flex-start;
         padding: 25px 5%;
     }
+}
+
+
+/* ========================================
+   BARANGAYASSIST - SECTION DESIGN UPDATE
+   About, Services, Contact
+======================================== */
+
+.ba-inner {
+    width: min(1120px, 90%);
+    margin-inline: auto;
+}
+
+.ba-about,
+.ba-services,
+.ba-contact {
+    padding: 100px 0;
+    scroll-margin-top: 90px;
+}
+
+.ba-about {
+    background: #f8f8f3;
+    color: #18291e;
+}
+
+.ba-services {
+    background: #101b14;
+    color: #f6f5ee;
+}
+
+.ba-section-heading {
+    max-width: 680px;
+    margin-bottom: 42px;
+}
+
+.ba-section-heading.ba-centered {
+    text-align: center;
+    margin-inline: auto;
+}
+
+.ba-eyebrow {
+    display: inline-block;
+    margin-bottom: 15px;
+    color: #b58b43;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.ba-section-heading h2,
+.ba-contact-copy h2 {
+    margin: 0 0 18px;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.16;
+    letter-spacing: -0.8px;
+}
+
+.ba-section-heading>p,
+.ba-contact-copy>p {
+    max-width: 620px;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.85;
+    opacity: 0.78;
+}
+
+.ba-about-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.ba-about-card {
+    position: relative;
+    padding: 30px 26px;
+    background: #fff;
+    border: 1px solid #e7e8df;
+    border-radius: 14px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ba-about-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 32px rgb(23 42 29 / 8%);
+}
+
+.ba-card-number {
+    position: absolute;
+    top: 22px;
+    right: 23px;
+    color: #a4aa9f;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.ba-card-icon,
+.ba-service-icon,
+.ba-contact-icon {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    color: #d2ad62;
+    background: #1b3022;
+    font-size: 1.45rem;
+}
+
+.ba-about-card h3,
+.ba-service-card h3 {
+    margin: 23px 0 10px;
+    font-size: 1.13rem;
+    font-weight: 700;
+}
+
+.ba-about-card p,
+.ba-service-card p {
+    margin: 0;
+    font-size: 0.94rem;
+    line-height: 1.8;
+    opacity: 0.78;
+}
+
+.ba-services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.ba-service-card {
+    padding: 29px;
+    background: #17251b;
+    border: 1px solid rgb(255 255 255 / 9%);
+    border-radius: 14px;
+    transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
+}
+
+.ba-service-card:hover {
+    transform: translateY(-4px);
+    border-color: rgb(210 173 98 / 60%);
+    background: #1c2d21;
+}
+
+.ba-service-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ba-service-top>span {
+    color: #d2ad62;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.ba-service-card h3 {
+    margin-top: 24px;
+    color: #f8f6ee;
+}
+
+.ba-service-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 23px;
+    color: #dfbd76;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.ba-service-link:hover {
+    color: #fff0c9;
+}
+
+.ba-service-link ion-icon {
+    transition: transform 0.2s ease;
+}
+
+.ba-service-link:hover ion-icon {
+    transform: translateX(4px);
+}
+
+.ba-service-note {
+    display: inline-block;
+    margin-top: 23px;
+    color: #c9cfc7;
+    font-size: 0.84rem;
+}
+
+.ba-contact {
+    background: #f8f8f3;
+    color: #18291e;
+}
+
+.ba-contact-panel {
+    display: grid;
+    grid-template-columns: 1fr 0.9fr;
+    gap: 55px;
+    align-items: center;
+    padding: clamp(28px, 5vw, 58px);
+    border: 1px solid #e5e7dc;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 16px 45px rgb(25 42 29 / 5%);
+}
+
+.ba-contact-copy h2 {
+    max-width: 500px;
+}
+
+.ba-contact-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 27px;
+    padding: 13px 19px;
+    border: 1px solid #243d2b;
+    border-radius: 7px;
+    background: #243d2b;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.ba-contact-button:hover {
+    background: #34543c;
+}
+
+.ba-contact-details {
+    display: grid;
+    gap: 25px;
+}
+
+.ba-contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 17px;
+}
+
+.ba-contact-icon {
+    width: 44px;
+    height: 44px;
+    background: #edf0e8;
+    color: #294832;
+    font-size: 1.25rem;
+}
+
+.ba-contact-item>div:last-child {
+    min-width: 0;
+}
+
+.ba-contact-item span {
+    color: #a17a35;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+}
+
+.ba-contact-item h3 {
+    margin: 6px 0;
+    font-size: 1rem;
+}
+
+.ba-contact-item p {
+    margin: 0;
+    color: #667066;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+
+/* Responsive layout */
+
+@media (max-width: 800px) {
+    .ba-about,
+    .ba-services,
+    .ba-contact {
+        padding: 72px 0;
+    }
+    .ba-about-grid {
+        grid-template-columns: 1fr;
+    }
+    .ba-services-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .ba-contact-panel {
+        grid-template-columns: 1fr;
+        gap: 38px;
+    }
+}
+
+@media (max-width: 520px) {
+    .ba-inner {
+        width: min(100% - 32px, 1120px);
+    }
+    .ba-about,
+    .ba-services,
+    .ba-contact {
+        padding: 58px 0;
+    }
+    .ba-section-heading {
+        margin-bottom: 29px;
+    }
+    .ba-services-grid {
+        grid-template-columns: 1fr;
+    }
+    .ba-about-card,
+    .ba-service-card {
+        padding: 24px;
+    }
+    .ba-contact-panel {
+        padding: 25px 21px;
+        gap: 32px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ba-about-card,
+    .ba-service-card,
+    .ba-service-link ion-icon,
+    .ba-contact-button {
+        transition: none;
+    }
+}
+
+
+/* Improve About section readability */
+
+#about {
+    padding: 80px 20px;
+    background-color: #f8fafc;
+    color: #1e293b;
+}
+
+#about h2,
+#about h3 {
+    color: #0f2f4f;
+    line-height: 1.4;
+}
+
+#about p {
+    color: #334155;
+    font-size: 16px;
+    line-height: 1.8;
+    font-weight: 400;
+    max-width: 800px;
+}
+
+#about .about-content {
+    max-width: 1100px;
+    margin: 0 auto;
 }

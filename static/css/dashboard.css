@@ -990,3 +990,959 @@ body.dark-mode .footer em {
         font-size: 9px;
     }
 }
+
+
+/* =====================================================
+   BARANGAY OFFICE UI REFRESH
+   Flat, records-first styling for resident and staff views.
+   ===================================================== */
+
+:root {
+    --shadow: 0 2px 10px rgba(4, 55, 40, 0.07);
+    --sidebar-width: 232px;
+}
+
+.sidebar {
+    padding: 22px 14px;
+    border-right: 1px solid rgba(255, 255, 255, .08);
+}
+
+.sidebar-brand {
+    margin-bottom: 30px;
+    padding-left: 8px;
+}
+
+.brand-logo {
+    width: 46px;
+    height: 46px;
+    border-width: 2px;
+    border-radius: 8px;
+    font-size: 24px;
+}
+
+.brand-text h2 {
+    font-size: 18px;
+}
+
+.nav-item {
+    min-height: 44px;
+    gap: 13px;
+    padding: 0 14px;
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+.nav-item:hover {
+    transform: none;
+    background: rgba(255, 255, 255, .06);
+}
+
+.nav-item.active {
+    background: var(--yellow) !important;
+    color: #102d23 !important;
+    box-shadow: none;
+}
+
+.sidebar-slogan,
+.sidebar-illustration {
+    display: none;
+}
+
+.topbar {
+    height: 76px;
+    padding: 0 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.top-nav {
+    gap: 22px;
+}
+
+.top-nav-item {
+    height: 76px;
+    font-size: 13px;
+}
+
+.top-nav-item.active::after {
+    bottom: 12px;
+    height: 2px;
+    border-radius: 0;
+}
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 7px;
+    font-size: 19px;
+}
+
+.dashboard-container,
+.dashboard-content {
+    max-width: 1280px;
+    padding: 30px 34px 24px;
+}
+
+.welcome,
+.welcome-card {
+    height: 150px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.welcome-text {
+    padding: 28px 32px;
+}
+
+.welcome h2,
+.welcome-text h1 {
+    font-size: 30px;
+}
+
+.stats-grid {
+    gap: 12px;
+    margin: 18px 0;
+}
+
+.stat-card,
+.submit-card,
+.recent-card,
+.quick-card {
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.stat-card {
+    min-height: 98px;
+    padding: 18px;
+    border: 1px solid var(--border);
+}
+
+.stat-icon,
+.concern-icon {
+    border-radius: 7px;
+}
+
+.content-grid {
+    gap: 18px;
+}
+
+.submit-card,
+.recent-card {
+    border: 1px solid var(--border);
+}
+
+.submit-content h2,
+.recent-header h2,
+.quick-card h2 {
+    font-size: 22px;
+}
+
+.primary-btn,
+.save-btn {
+    border-radius: 6px;
+    box-shadow: none;
+}
+
+.concern-type {
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    box-shadow: none;
+}
+
+.concern-type:hover {
+    transform: none;
+    border-color: var(--green);
+    box-shadow: none;
+}
+
+.concern-row {
+    min-height: 72px;
+    border-bottom: 1px solid var(--border);
+}
+
+.status,
+.category {
+    border-radius: 4px;
+}
+
+.footer {
+    border-top: 1px solid var(--border);
+}
+
+@media (max-width: 800px) {
+    .dashboard-container,
+    .dashboard-content {
+        padding: 22px 18px 20px;
+    }
+    .welcome,
+    .welcome-card {
+        border-radius: 8px;
+    }
+}
+
+
+/* =====================================================
+   SIMPLE COLLEGE PROJECT MODE
+   Plain civic records interface; no decorative dashboard styling.
+   ===================================================== */
+
+:root {
+    --sidebar-width: 220px;
+    --cream: #f1f3f2;
+    --white: #ffffff;
+    --text-dark: #17352b;
+    --text: #28483d;
+    --text-light: #687a72;
+    --border: #d7dfda;
+    --shadow: 0 1px 3px rgba(19, 52, 42, .06);
+    --green-dark: #07513d;
+    --green: #0b654b;
+    --yellow: #e7b735;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--cream);
+    color: var(--text);
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    padding: 18px 12px;
+    background: var(--green-dark);
+    border-right: 1px solid #063d2f;
+}
+
+.sidebar-brand {
+    gap: 10px;
+    margin-bottom: 27px;
+    padding: 4px 8px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, .14);
+}
+
+.brand-logo {
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--yellow);
+    border-radius: 4px;
+    font-size: 18px;
+}
+
+.brand-text h2,
+.welcome h2,
+.welcome-text h1,
+.submit-content h2,
+.recent-header h2,
+.quick-card h2 {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.brand-text h2 {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.brand-text p {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8px;
+    letter-spacing: .7px;
+}
+
+.sidebar-nav {
+    gap: 3px;
+}
+
+.nav-item {
+    min-height: 40px;
+    gap: 11px;
+    padding: 0 11px;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+.nav-item.active {
+    background: #dcece4 !important;
+    color: var(--green-dark) !important;
+    border-left: 3px solid var(--yellow);
+    padding-left: 8px;
+}
+
+.sidebar-bottom,
+.sidebar-slogan,
+.sidebar-illustration {
+    display: none;
+}
+
+.main {
+    margin-left: var(--sidebar-width);
+}
+
+.topbar {
+    height: 64px;
+    padding: 0 26px;
+    background: var(--green-dark);
+}
+
+.top-nav {
+    gap: 16px;
+}
+
+.top-nav-item {
+    height: 64px;
+    padding: 0 6px;
+    font-size: 12px;
+}
+
+.top-nav-item.active {
+    color: #f6d76e;
+}
+
+.top-nav-item.active::after {
+    bottom: 0;
+    height: 2px;
+    border-radius: 0;
+}
+
+.user-profile {
+    margin-left: 25px;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 3px;
+    font-size: 16px;
+}
+
+.user-info strong {
+    font-size: 12px;
+}
+
+.user-info span {
+    font-size: 10px;
+}
+
+.dashboard-container,
+.dashboard-content {
+    max-width: 1260px;
+    padding: 22px 26px 22px;
+}
+
+.welcome,
+.welcome-card {
+    height: 132px;
+    border-radius: 3px;
+    box-shadow: var(--shadow);
+}
+
+.welcome-text {
+    padding: 24px 26px;
+}
+
+.eyebrow,
+.section-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    letter-spacing: .7px;
+    font-weight: 700;
+    color: var(--green);
+}
+
+.welcome h2,
+.welcome-text h1 {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.welcome-description,
+.welcome-text p {
+    font-size: 13px;
+}
+
+.barangay-image {
+    display: none;
+}
+
+.stats-grid {
+    gap: 10px;
+    margin: 14px 0;
+}
+
+.stat-card,
+.submit-card,
+.recent-card,
+.quick-card {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    box-shadow: var(--shadow);
+}
+
+.stat-card {
+    min-height: 82px;
+    padding: 14px 16px;
+    gap: 12px;
+}
+
+.stat-card.total {
+    border-left: 4px solid var(--green);
+}
+
+.stat-card.pending {
+    border-left: 4px solid #d7a824;
+}
+
+.stat-card.progress {
+    border-left: 4px solid #5c91b4;
+}
+
+.stat-card.resolved {
+    border-left: 4px solid #5a9a69;
+}
+
+.stat-icon,
+.concern-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 3px;
+}
+
+.stat-info strong {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 22px;
+}
+
+.stat-info span {
+    font-size: 11px;
+}
+
+.content-grid {
+    gap: 14px;
+}
+
+.submit-card,
+.recent-card {
+    padding: 20px;
+}
+
+.submit-content h2,
+.recent-header h2,
+.quick-card h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.submit-content p,
+.about-card p,
+.service-item p {
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.primary-btn,
+.save-btn {
+    border-radius: 3px;
+    box-shadow: none;
+    font-size: 12px;
+}
+
+.concern-grid {
+    gap: 8px;
+}
+
+.concern-type {
+    padding: 9px 5px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: #fafcfb;
+}
+
+.concern-type:hover {
+    transform: none;
+    border-color: var(--green);
+    box-shadow: none;
+}
+
+.recent-header {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.concern-row {
+    min-height: 64px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.concern-details strong {
+    font-size: 13px;
+}
+
+.concern-details span,
+.status-area small {
+    font-size: 11px;
+}
+
+.status,
+.category {
+    border-radius: 3px;
+    font-size: 10px;
+}
+
+.footer {
+    border-top: 1px solid var(--border);
+    font-size: 10px;
+}
+
+@media (max-width: 800px) {
+    .dashboard-container,
+    .dashboard-content {
+        padding: 16px;
+    }
+    .welcome,
+    .welcome-card {
+        height: auto;
+    }
+}
+
+
+/* =====================================================
+   PROFESSIONAL CIVIC OFFICE MODE
+   AdminLTE-inspired structure using BarangayAssist colors.
+   ===================================================== */
+
+body {
+    background: #f4f6f5;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.sidebar {
+    background: #063f30;
+    box-shadow: 1px 0 3px rgba(0, 0, 0, .08);
+}
+
+.sidebar-brand {
+    border-bottom-color: rgba(255, 255, 255, .12);
+}
+
+.nav-item {
+    color: #dceae4;
+    border-radius: 4px;
+}
+
+.nav-item.active {
+    background: #dcece4 !important;
+    color: #063f30 !important;
+}
+
+.main {
+    background: #f4f6f5;
+}
+
+.topbar {
+    height: 64px;
+    background: #fff;
+    color: #28483d;
+    border-bottom: 1px solid #dfe5e1;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+}
+
+.top-nav-item {
+    height: 64px;
+    color: #53655d;
+}
+
+.top-nav-item:hover,
+.top-nav-item.active {
+    color: #063f30;
+}
+
+.top-nav-item.active::after {
+    background: #d9a441;
+    bottom: 0;
+}
+
+.user-avatar {
+    background: #063f30;
+    color: #f1c75b;
+    border-color: #dce5df;
+}
+
+.user-info strong {
+    color: #1d3c31;
+}
+
+.user-info span {
+    color: #728078;
+}
+
+.dashboard-container,
+.dashboard-content {
+    padding: 24px 28px;
+}
+
+.welcome,
+.welcome-card {
+    height: 132px;
+    background: #fff;
+    border: 1px solid #d8e0db;
+    border-left: 4px solid #0b654b;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+}
+
+.welcome-text {
+    padding: 24px 26px;
+}
+
+.welcome h2,
+.welcome-text h1 {
+    color: #17352b;
+}
+
+.stats-grid {
+    margin: 16px 0;
+}
+
+.stat-card,
+.submit-card,
+.recent-card,
+.quick-card {
+    background: #fff;
+    border: 1px solid #d8e0db;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
+}
+
+.stat-card {
+    border-left-width: 4px;
+}
+
+.submit-card,
+.recent-card {
+    padding: 21px;
+}
+
+.primary-btn {
+    background: #0b654b;
+    color: #fff;
+    border: 1px solid #07513d;
+}
+
+.primary-btn:hover {
+    background: #07513d;
+}
+
+.concern-type {
+    background: #fff;
+}
+
+.recent-header {
+    border-bottom: 1px solid #e1e7e3;
+}
+
+.concern-row {
+    border-bottom: 1px solid #e1e7e3;
+}
+
+.footer {
+    color: #718078;
+}
+
+@media (max-width: 800px) {
+    .topbar {
+        background: #fff;
+    }
+    .mobile-menu {
+        color: #063f30;
+    }
+}
+
+
+/* Shared BarangayAssist logo in the dashboard sidebar */
+
+.sidebar-brand {
+    display: block;
+    padding: 8px 8px 18px;
+}
+
+.dashboard-logo {
+    display: block;
+    width: 172px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: left center;
+}
+
+.admin-brand {
+    display: block;
+    padding: 8px 8px 18px;
+}
+
+.admin-brand .dashboard-logo {
+    width: 172px;
+    height: auto;
+    object-fit: contain;
+}
+
+
+/* =====================================================
+   DARK MODE / LIGHT MODE FINISHING RULES
+   ===================================================== */
+
+body.dark-mode {
+    background: #101b17;
+    color: #dce8e2;
+}
+
+body.dark-mode .main,
+body.dark-mode .dashboard-content {
+    background: #101b17;
+}
+
+body.dark-mode .topbar {
+    background: #172a23;
+    border-bottom-color: #29453a;
+    color: #dce8e2;
+}
+
+body.dark-mode .top-nav-item,
+body.dark-mode .user-info strong {
+    color: #dce8e2;
+}
+
+body.dark-mode .top-nav-item:hover,
+body.dark-mode .top-nav-item.active {
+    color: #f1c75b;
+}
+
+body.dark-mode .user-info span {
+    color: #a8bbb1;
+}
+
+body.dark-mode .welcome,
+body.dark-mode .welcome-card,
+body.dark-mode .stat-card,
+body.dark-mode .submit-card,
+body.dark-mode .recent-card,
+body.dark-mode .quick-card,
+body.dark-mode .concern-type {
+    background: #182a23;
+    border-color: #2d493d;
+    color: #dce8e2;
+}
+
+body.dark-mode .welcome h2,
+body.dark-mode .welcome-text h1,
+body.dark-mode .submit-content h2,
+body.dark-mode .recent-header h2,
+body.dark-mode .quick-card h2,
+body.dark-mode .common-concerns h3 {
+    color: #f0f6f2;
+}
+
+body.dark-mode .welcome-description,
+body.dark-mode .welcome-text p,
+body.dark-mode .submit-content p,
+body.dark-mode .concern-details span,
+body.dark-mode .status-area small,
+body.dark-mode .footer {
+    color: #a8bbb1;
+}
+
+body.dark-mode .recent-header,
+body.dark-mode .concern-row,
+body.dark-mode .footer {
+    border-color: #2d493d;
+}
+
+body.dark-mode .concern-type:hover {
+    background: #20382e;
+    border-color: #d9a441;
+}
+
+body.dark-mode .stat-icon,
+body.dark-mode .concern-icon {
+    background: #20382e;
+    color: #a9d6bd;
+}
+
+body.dark-mode .primary-btn {
+    background: #d9a441;
+    border-color: #d9a441;
+    color: #172a23;
+}
+
+body.dark-mode .primary-btn:hover {
+    background: #f1c75b;
+}
+
+body.dark-mode .category {
+    background: #244337;
+    color: #c7e2d3;
+}
+
+body.dark-mode .pending-status {
+    background: #4a3d19;
+    color: #f1d477;
+}
+
+body.dark-mode .in-progress-status {
+    background: #203b4b;
+    color: #9bc9e4;
+}
+
+body.dark-mode .resolved-status {
+    background: #21432f;
+    color: #a7d8b5;
+}
+
+body.dark-mode .mobile-menu {
+    color: #f0f6f2;
+}
+
+
+/* =====================================================
+   SUBMIT CONCERN FORM — PROFESSIONAL OFFICE FORM
+   ===================================================== */
+
+.submit-card form {
+    max-width: 760px;
+}
+
+.input-box {
+    position: relative;
+    min-height: 54px;
+    margin-bottom: 18px;
+    padding: 18px 14px 7px 42px;
+    background: #fff;
+    border: 1px solid #cfdad3;
+    border-radius: 4px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.input-box:focus-within {
+    border-color: #0b654b;
+    box-shadow: 0 0 0 2px rgba(11, 101, 75, .12);
+}
+
+.input-box .icon {
+    position: absolute;
+    top: 17px;
+    left: 14px;
+    color: #0b654b;
+    font-size: 18px;
+}
+
+.input-box input,
+.input-box select,
+.input-box textarea {
+    display: block;
+    width: 100%;
+    min-height: 25px;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent !important;
+    color: #183d34;
+    font: inherit;
+    font-size: 14px;
+}
+
+.input-box select {
+    cursor: pointer;
+}
+
+.input-box textarea {
+    min-height: 105px;
+    padding-top: 4px !important;
+    resize: vertical;
+}
+
+.input-box label {
+    position: absolute;
+    top: 7px;
+    left: 42px;
+    color: #6c7e77;
+    font-size: 10px;
+    font-weight: 700;
+    pointer-events: none;
+}
+
+.input-box:has(textarea) {
+    padding-top: 25px;
+}
+
+.input-box:has(textarea) label {
+    top: 8px;
+}
+
+.input-box.error,
+.input-box.is-invalid {
+    border-color: #bd5b50;
+}
+
+.form-error,
+.error-message {
+    color: #a33d34;
+    font-size: 12px;
+}
+
+body.dark-mode .input-box {
+    background: #182a23;
+    border-color: #395648;
+}
+
+body.dark-mode .input-box:focus-within {
+    border-color: #d9a441;
+    box-shadow: 0 0 0 2px rgba(217, 164, 65, .16);
+}
+
+body.dark-mode .input-box input,
+body.dark-mode .input-box select,
+body.dark-mode .input-box textarea {
+    color: #e4efe9;
+}
+
+body.dark-mode .input-box label,
+body.dark-mode .input-box .icon {
+    color: #a8bbb1;
+}
+
+body.dark-mode .input-box .icon {
+    color: #e4c05d;
+}
+
+@media (max-width: 650px) {
+    .dashboard-content {
+        padding: 16px;
+    }
+    .submit-card form {
+        max-width: none;
+    }
+    .input-box {
+        margin-bottom: 14px;
+    }
+}
+
+.input-box .field-error {
+    display: block;
+    margin-top: 6px;
+    color: #a33d34;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+.input-box.is-invalid {
+    padding-bottom: 12px;
+}
+
+.primary-btn:disabled,
+.primary-btn.is-submitting {
+    opacity: .72;
+    cursor: wait;
+}
+
+body.dark-mode .input-box .field-error {
+    color: #f1a49b;
+}

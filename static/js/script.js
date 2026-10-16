@@ -144,7 +144,7 @@ if (loginForm) {
         }
 
         if (emailOk && passOk) {
-            this.submit(); // I-submit sa Django Backend
+            this.submit(); // I-submit sa backend
         } else if (status) {
             status.textContent = 'Please fix the highlighted fields.';
             status.classList.add('bad', 'show');
@@ -198,7 +198,11 @@ if (registerForm) {
 
         const nameOk = name ? name.value.trim().length > 1 : false;
         const purokOk = purok ? purok.value.trim().length > 0 : false;
-        const contactOk = contact ? /^0\d{10}$/.test(contact.value.trim()) : false;
+
+        // Flexible Contact Check: 11 digits nga mag-sugod sa 09
+        const contactClean = contact ? contact.value.trim().replace(/[-\s]/g, '') : '';
+        const contactOk = /^09\d{9}$/.test(contactClean);
+
         const emailOk = email ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim()) : false;
         const passOk = pass ? pass.value.length >= 8 : false;
         const confirmOk = confirm && pass ? confirm.value === pass.value && confirm.value.length > 0 : false;
@@ -225,7 +229,7 @@ if (registerForm) {
         const allOk = nameOk && purokOk && contactOk && emailOk && passOk && confirmOk && consentOk;
 
         if (allOk) {
-            this.submit(); // I-submit sa Django Backend
+            this.submit();
         } else if (status) {
             status.textContent = 'Please complete and correct the highlighted fields.';
             status.classList.add('bad', 'show');
