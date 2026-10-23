@@ -1,0 +1,260 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Profile - BarangayAssist{% endblock %}
+{% block nav_profile %}active{% endblock %}
+{% block topbar_eyebrow %}RESIDENT PORTAL{% endblock %}
+{% block topbar_title %}Profile{% endblock %}
+
+{% block content %}
+
+
+<!-- ================= INTRO ================= -->
+
+<section class="admin-intro">
+
+    <div class="intro-text">
+
+        <span class="section-label">MY ACCOUNT</span>
+
+        <h2>{{ clean_name }}</h2>
+
+        <p>
+            The account details the barangay uses to verify you
+            as a resident and route your concerns.
+        </p>
+
+    </div>
+
+    <div class="overview-icon">
+
+        <ion-icon
+            name="person-outline">
+        </ion-icon>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ACCOUNT DETAILS ================= -->
+
+<section class="concerns-panel">
+
+
+    <div class="panel-header">
+
+        <div>
+
+            <span class="section-label">
+                ACCOUNT DETAILS
+            </span>
+
+            <h2>
+                Resident Information
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-body">
+
+
+        <div class="profile-head">
+
+            <div class="management-icon">
+
+                <ion-icon name="person-outline"></ion-icon>
+
+            </div>
+
+            <div class="profile-head-text">
+
+                <strong>{{ clean_name }}</strong>
+
+                <span>Registered Resident</span>
+
+            </div>
+
+        </div>
+
+
+        <div class="settings-summary-row">
+
+            <span>Full Name</span>
+
+            <strong>{{ account.name }}</strong>
+
+        </div>
+
+
+        <div class="settings-summary-row">
+
+            <span>Email Address</span>
+
+            <strong>{{ account.email }}</strong>
+
+        </div>
+
+
+        <div class="settings-summary-row">
+
+            <span>Purok / Zone</span>
+
+            <strong>{{ account.purok or 'Not provided' }}</strong>
+
+        </div>
+
+
+        <div class="settings-summary-row">
+
+            <span>Contact Number</span>
+
+            <strong>{{ account.contact or 'Not provided' }}</strong>
+
+        </div>
+
+
+        <div class="settings-summary-row">
+
+            <span>Account Type</span>
+
+            <span class="status resident-status">
+                {{ account.role|title }}
+            </span>
+
+        </div>
+
+
+        <div class="settings-note">
+
+            <p>
+                Your name and purok are used to route concerns to the
+                correct office. To update any of these details, visit
+                or contact the barangay office.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ACTIVITY SUMMARY ================= -->
+
+<section class="concerns-panel">
+
+
+    <div class="panel-header">
+
+        <div>
+
+            <span class="section-label">
+                ACTIVITY SUMMARY
+            </span>
+
+            <h2>
+                My Concerns
+            </h2>
+
+        </div>
+
+
+        <a class="route-assign-link" href="{{ url_for('my_concerns') }}">
+
+            View All
+
+            <ion-icon name="arrow-forward-outline"></ion-icon>
+
+        </a>
+
+    </div>
+
+
+    <div class="stats-grid profile-stats">
+
+
+        <div class="admin-stat-card total">
+
+            <div class="stat-icon">
+
+                <ion-icon name="document-text-outline"></ion-icon>
+
+            </div>
+
+            <div class="stat-info">
+
+                <span>Total Concerns</span>
+
+                <strong>{{ total_concerns }}</strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-stat-card pending">
+
+            <div class="stat-icon">
+
+                <ion-icon name="time-outline"></ion-icon>
+
+            </div>
+
+            <div class="stat-info">
+
+                <span>Pending</span>
+
+                <strong>{{ pending_count }}</strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-stat-card progress">
+
+            <div class="stat-icon">
+
+                <ion-icon name="sync-outline"></ion-icon>
+
+            </div>
+
+            <div class="stat-info">
+
+                <span>In Progress</span>
+
+                <strong>{{ in_progress_count }}</strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-stat-card resolved">
+
+            <div class="stat-icon">
+
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+
+            </div>
+
+            <div class="stat-info">
+
+                <span>Resolved</span>
+
+                <strong>{{ resolved_count }}</strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,258 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Profile - BarangayAssist{% endblock %}
+{% block topbar_title %}Profile{% endblock %}
+
+{% block content %}
+
+
+<!-- ================= INTRO ================= -->
+
+<section class="admin-intro">
+
+    <div class="intro-text">
+
+        <span class="section-label">MY ACCOUNT</span>
+
+        <h2>{{ clean_name }}</h2>
+
+        <p>
+            Your barangay staff account details and a summary
+            of the concerns assigned to you.
+        </p>
+
+    </div>
+
+    <div class="overview-icon">
+
+        <ion-icon
+            name="person-outline">
+        </ion-icon>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ACCOUNT DETAILS ================= -->
+
+<section class="concerns-panel">
+
+
+    <div class="panel-header">
+
+        <div>
+
+            <span class="section-label">
+                ACCOUNT DETAILS
+            </span>
+
+            <h2>
+                Staff Information
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-body">
+
+
+        <div class="profile-head">
+
+            <div class="management-icon">
+
+                <ion-icon name="person-outline"></ion-icon>
+
+            </div>
+
+            <div class="profile-head-text">
+
+                <strong>{{ clean_name }}</strong>
+
+                <span>Barangay Staff Account</span>
+
+            </div>
+
+        </div>
+
+
+        <div class="settings-summary-row">
+
+            <span>Full Name</span>
+
+            <strong>{{ account.name }}</strong>
+
+        </div>
+
+
+        <div class="settings-summary-row">
+
+            <span>Email Address</span>
+
+            <strong>{{ account.email }}</strong>
+
+        </div>
+
+
+        <div class="settings-summary-row">
+
+            <span>Purok / Zone</span>
+
+            <strong>{{ account.purok or 'Not provided' }}</strong>
+
+        </div>
+
+
+        <div class="settings-summary-row">
+
+            <span>Contact Number</span>
+
+            <strong>{{ account.contact or 'Not provided' }}</strong>
+
+        </div>
+
+
+        <div class="settings-summary-row">
+
+            <span>Account Type</span>
+
+            <span class="staff-role-badge">
+                Barangay Staff
+            </span>
+
+        </div>
+
+
+        <div class="settings-note">
+
+            <p>
+                Staff accounts are created and managed by the barangay
+                administrator. To update any of these details, visit
+                or contact the barangay office.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ACTIVITY SUMMARY ================= -->
+
+<section class="concerns-panel">
+
+
+    <div class="panel-header">
+
+        <div>
+
+            <span class="section-label">
+                WORK SUMMARY
+            </span>
+
+            <h2>
+                Assigned Concerns
+            </h2>
+
+        </div>
+
+
+        <a class="route-assign-link" href="{{ url_for('staff_concerns') }}">
+
+            View All
+
+            <ion-icon name="arrow-forward-outline"></ion-icon>
+
+        </a>
+
+    </div>
+
+
+    <div class="stats-grid profile-stats">
+
+
+        <div class="admin-stat-card total">
+
+            <div class="stat-icon">
+
+                <ion-icon name="document-text-outline"></ion-icon>
+
+            </div>
+
+            <div class="stat-info">
+
+                <span>Total Assigned</span>
+
+                <strong>{{ total_concerns }}</strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-stat-card pending">
+
+            <div class="stat-icon">
+
+                <ion-icon name="time-outline"></ion-icon>
+
+            </div>
+
+            <div class="stat-info">
+
+                <span>Pending</span>
+
+                <strong>{{ pending_count }}</strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-stat-card progress">
+
+            <div class="stat-icon">
+
+                <ion-icon name="sync-outline"></ion-icon>
+
+            </div>
+
+            <div class="stat-info">
+
+                <span>In Progress</span>
+
+                <strong>{{ in_progress_count }}</strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-stat-card resolved">
+
+            <div class="stat-icon">
+
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+
+            </div>
+
+            <div class="stat-info">
+
+                <span>Resolved</span>
+
+                <strong>{{ resolved_count }}</strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}

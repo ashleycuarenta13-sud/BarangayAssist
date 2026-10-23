@@ -1,13 +1,12 @@
+
 {% extends 'base.html' %}
 
 {% block title %}Submit Concern - BarangayAssist{% endblock %}
 {% block nav_submit %}active{% endblock %}
-{% block topnav_submit %}active{% endblock %}
-{% block nav_dashboard %}{% endblock %}
-{% block topnav_dashboard %}{% endblock %}
+{% block topbar_title %}Submit Concern{% endblock %}
 
 {% block content %}
-<div class="dashboard-content">
+<div class="dashboard-content submit-concern-page">
 
     <section class="welcome-card">
         <div class="welcome-text">
@@ -20,34 +19,40 @@
     <section class="content-grid">
         <div class="left-column">
             <div class="submit-card">
-                <form action="{{ url_for('submit_concern') }}" method="POST" novalidate>
+                <div class="submit-content">
+                    <span class="section-label">CONCERN DETAILS</span>
+                    <h2>Concern Information</h2>
+                    <p>Please provide accurate details so your concern can be reviewed properly.</p>
+                </div>
+
+                <form action="{{ url_for('submit_concern') }}" method="POST" class="concern-form">
                     <div class="input-box" id="box-title">
-                        <span class="icon"><ion-icon name="document-text-outline"></ion-icon></span>
-                        <input type="text" id="title" name="title" required>
-                        <label>Concern Title</label>
+                        <label for="title">Concern Title</label>
+                        <input type="text" id="title" name="title" maxlength="150" required
+                               placeholder="Enter a short title">
                     </div>
 
                     <div class="input-box" id="box-category">
-                        <span class="icon"><ion-icon name="pricetag-outline"></ion-icon></span>
-                        <select id="category" name="category">
+                        <label for="category">Category</label>
+                        <select id="category" name="category" required>
                             <option value="General">General</option>
                             <option value="Street Lights">Street Lights</option>
                             <option value="Waste Collection">Waste Collection</option>
                             <option value="Water Supply">Water Supply</option>
-                            <option value="Roads & Drainage">Roads & Drainage</option>
+                            <option value="Roads & Drainage">Roads &amp; Drainage</option>
                             <option value="Community Services">Community Services</option>
                         </select>
-                        <label>Category</label>
                     </div>
 
-                    <div class="input-box" id="box-description" style="height: auto;">
-                        <textarea id="description" name="description" rows="5" required
-                            style="width: 100%; padding: 15px 0 5px; border: none; outline: none; background: transparent; resize: vertical;"></textarea>
-                        <label>Description</label>
+                    <div class="input-box" id="box-description">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="5" maxlength="3000"
+                                  required placeholder="Describe the concern and where it happened."></textarea>
                     </div>
 
-                    <button type="submit" class="btn primary-btn" style="margin-top: 20px;">
-                        <ion-icon name="send-outline"></ion-icon> Submit Concern
+                    <button type="submit" class="btn primary-btn">
+                        <ion-icon name="send-outline"></ion-icon>
+                        Submit Concern
                     </button>
                 </form>
             </div>

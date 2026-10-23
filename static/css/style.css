@@ -895,6 +895,12 @@ button {
     display: block;
 }
 
+/* Invalid state applied by script.js setError() */
+.input-box.invalid {
+    border-color: var(--error);
+    box-shadow: 0 0 0 3px rgba(180, 60, 50, 0.14);
+}
+
 
 /* ==============================
    PASSWORD METER
@@ -987,6 +993,16 @@ button {
     color: var(--teal-600);
     text-align: center;
     font-size: 12px;
+}
+
+.form-status.bad {
+    color: var(--error);
+    font-weight: 600;
+}
+
+.form-status.ok {
+    color: #19763c;
+    font-weight: 600;
 }
 
 
@@ -1556,4 +1572,40 @@ button {
 #about .about-content {
     max-width: 1100px;
     margin: 0 auto;
+}
+/* ==============================
+   REGISTRATION SUCCESS BANNER
+   ============================== */
+
+.registered-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 18px;
+    padding: 12px 14px;
+    border: 1px solid rgba(63, 91, 68, 0.35);
+    border-radius: 12px;
+    background: rgba(63, 91, 68, 0.10);
+    color: #2f4a37;
+}
+
+.registered-banner[hidden] {
+    display: none;
+}
+
+.registered-banner ion-icon {
+    font-size: 26px;
+    color: #3f5b44;
+    flex-shrink: 0;
+}
+
+.registered-banner strong {
+    display: block;
+    font-size: 0.95rem;
+}
+
+.registered-banner span {
+    display: block;
+    font-size: 0.82rem;
+    opacity: 0.85;
 }

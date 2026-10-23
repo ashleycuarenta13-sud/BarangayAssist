@@ -1,0 +1,356 @@
+
+{% extends 'base.html' %}
+
+{% block title %}My Concerns - BarangayAssist{% endblock %}
+{% block nav_my_concerns %}active{% endblock %}
+{% block topbar_eyebrow %}RESIDENT PORTAL{% endblock %}
+{% block topbar_title %}My Concerns{% endblock %}
+
+{% block content %}
+
+
+<!-- ================= INTRO ================= -->
+
+<section class="admin-intro">
+
+    <div class="intro-text">
+
+        <span class="section-label">MY CONCERNS</span>
+
+        <h2>Concern History</h2>
+
+        <p>
+            Every concern you have submitted to the barangay,
+            together with its current status.
+        </p>
+
+    </div>
+
+    <div class="overview-icon">
+
+        <ion-icon
+            name="document-text-outline">
+        </ion-icon>
+
+    </div>
+
+</section>
+
+
+<!-- ================= STATISTICS ================= -->
+
+<section class="stats-grid">
+
+
+    <div class="admin-stat-card total">
+
+        <div class="stat-icon">
+
+            <ion-icon
+                name="document-text-outline">
+            </ion-icon>
+
+        </div>
+
+
+        <div class="stat-info">
+
+            <span>
+                Total Concerns
+            </span>
+
+            <strong>
+                {{ concerns|length }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-stat-card pending">
+
+        <div class="stat-icon">
+
+            <ion-icon
+                name="time-outline">
+            </ion-icon>
+
+        </div>
+
+
+        <div class="stat-info">
+
+            <span>
+                Pending
+            </span>
+
+            <strong>
+                {{ pending_count|default(0) }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-stat-card progress">
+
+        <div class="stat-icon">
+
+            <ion-icon
+                name="sync-outline">
+            </ion-icon>
+
+        </div>
+
+
+        <div class="stat-info">
+
+            <span>
+                In Progress
+            </span>
+
+            <strong>
+                {{ in_progress_count|default(0) }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-stat-card resolved">
+
+        <div class="stat-icon">
+
+            <ion-icon
+                name="checkmark-circle-outline">
+            </ion-icon>
+
+        </div>
+
+
+        <div class="stat-info">
+
+            <span>
+                Resolved
+            </span>
+
+            <strong>
+                {{ resolved_count|default(0) }}
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ALL CONCERNS ================= -->
+
+<section class="concerns-panel">
+
+
+    <div class="panel-header">
+
+        <div>
+
+            <span class="section-label">
+                ALL RECORDS
+            </span>
+
+            <h2>
+                Submitted Concerns
+            </h2>
+
+        </div>
+
+
+        <div class="filter-area">
+
+            <input
+                type="search"
+                id="searchConcern"
+                class="concern-search-input"
+                placeholder="Search concerns or categories...">
+
+
+            <button
+                class="filter-btn active"
+                data-filter="all"
+                type="button">
+
+                All
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                data-filter="Pending"
+                type="button">
+
+                Pending
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                data-filter="In Progress"
+                type="button">
+
+                In Progress
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                data-filter="Resolved"
+                type="button">
+
+                Resolved
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="resident-table">
+
+        <!-- TABLE HEADER -->
+
+        <div class="table-header">
+
+            <span>
+                CONCERN
+            </span>
+
+            <span>
+                CATEGORY
+            </span>
+
+            <span>
+                STATUS
+            </span>
+
+            <span>
+                DATE
+            </span>
+
+        </div>
+
+
+        <!-- TABLE ROWS -->
+
+        <div id="concernList">
+
+            {% for concern in concerns %}
+
+            <div
+                class="table-row"
+                data-status="{{ concern.status }}">
+
+
+                <div class="concern-name">
+
+                    <div class="table-icon">
+
+                        <ion-icon
+                            name="document-text-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="concern-text">
+
+                        <strong>
+                            {{ concern.title }}
+                        </strong>
+
+                        <small>
+                            {{ concern.description|truncatewords(8) }}
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <span class="category">
+
+                    {{ concern.category }}
+
+                </span>
+
+
+                <span
+                    class="status {{ concern.status|slugify }}-status">
+
+                    {{ concern.status }}
+
+                </span>
+
+
+                <span class="date">
+
+                    {% if concern.created_at %}
+                        {{ concern.created_at.strftime('%b %d, %Y') }}
+                    {% else %}
+                        Date unavailable
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty-state">
+
+                <ion-icon
+                    name="documents-outline">
+                </ion-icon>
+
+                <h3>
+                    No concerns yet
+                </h3>
+
+                <p>
+                    Concerns you submit will be listed here
+                    so you can track their progress.
+                </p>
+
+                <a href="{{ url_for('submit_concern') }}" class="empty-state-link">
+
+                    Submit a Concern
+
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-empty-note" id="noSearchResults" hidden>
+
+        No concerns match your search.
+
+    </div>
+
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% from '_admin_nav.html' import admin_sidebar, admin_topbar, admin_footer with context %}
+
+{% block title %}Barangay Staff - BarangayAssist{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+
+    {{ admin_sidebar('staff') }}
+
+    <main class="admin-main">
+
+        {{ admin_topbar('ADMINISTRATION', 'Barangay Staff') }}
+
+        <div class="admin-content">
+
+            <section class="admin-intro">
+                <div class="intro-text">
+                    <span class="section-label">STAFF COORDINATION</span>
+                    <h2>Staff Workload</h2>
+                    <p>
+                        Track how many concerns each barangay staff member
+                        is handling and how far along they are.
+                    </p>
+                </div>
+                <div class="overview-icon">
+                    <ion-icon name="person-outline"></ion-icon>
+                </div>
+            </section>
+
+            <section class="stats-grid">
+                <div class="admin-stat-card total">
+                    <div class="stat-icon">
+                        <ion-icon name="people-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Staff Members</span>
+                        <strong>{{ staff_users|length }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card pending">
+                    <div class="stat-icon">
+                        <ion-icon name="time-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Total Assigned</span>
+                        <strong>{{ staff_users|map(attribute='assigned_count')|sum }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card progress">
+                    <div class="stat-icon">
+                        <ion-icon name="sync-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>In Progress</span>
+                        <strong>{{ staff_users|map(attribute='in_progress_count')|sum }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card resolved">
+                    <div class="stat-icon">
+                        <ion-icon name="checkmark-circle-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Resolved</span>
+                        <strong>{{ staff_users|map(attribute='resolved_count')|sum }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="concerns-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <span class="section-label">TEAM</span>
+                        <h2>Staff Accounts</h2>
+                    </div>
+                    <div class="filter-area">
+                        <input
+                            id="searchStaff"
+                            type="search"
+                            class="concern-search-input"
+                            placeholder="Search staff by name or email..."
+                            aria-label="Search staff">
+                    </div>
+                </div>
+
+                <div class="table-header admin-table-cols">
+                    <span>STAFF MEMBER</span>
+                    <span>ASSIGNED</span>
+                    <span>PENDING</span>
+                    <span>IN PROGRESS</span>
+                    <span>RESOLVED</span>
+                </div>
+
+                <div id="staffList">
+                    {% for member in staff_users %}
+                    <div class="table-row admin-table-cols admin-staff-row"
+                         data-search="{{ (member.name ~ ' ' ~ (member.email or ''))|lower }}">
+
+                        <div class="concern-name">
+                            <div class="table-icon">
+                                <ion-icon name="person-outline"></ion-icon>
+                            </div>
+                            <div class="concern-text">
+                                <strong>{{ member.name }}</strong>
+                                <small>{{ member.email or 'No email on file' }}</small>
+                            </div>
+                        </div>
+
+                        <span class="category">
+                            {{ member.assigned_count or 0 }} of {{ total_concerns }}
+                        </span>
+
+                        <span class="status pending-status">
+                            {{ member.pending_count or 0 }}
+                        </span>
+
+                        <span class="status in-progress-status">
+                            {{ member.in_progress_count or 0 }}
+                        </span>
+
+                        <span class="status resolved-status">
+                            {{ member.resolved_count or 0 }}
+                        </span>
+
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <h3>No staff accounts yet</h3>
+                        <p>
+                            Promote a resident to staff from the Users page
+                            to start assigning concerns.
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <p id="noStaffResults" class="admin-empty-note" hidden>
+                    No staff match your search.
+                </p>
+
+            </section>
+
+            {{ admin_footer() }}
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin_staff.js') }}"></script>
+{% endblock %}

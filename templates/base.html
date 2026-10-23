@@ -1,154 +1,212 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}BarangayAssist{% endblock %}</title>
+    <title>{% block title %}BarangayAssist | Community Concern Portal{% endblock %}</title>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {% set is_admin_page = request.endpoint and request.endpoint.startswith('admin_') %}
 
-    <!-- Stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+    {% if not is_admin_page %}
+    <!-- Resident/staff pages reuse the admin design system for the sidebar,
+         topbar, stat cards and tables so every role looks consistent. -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pages.css') }}">
+    {% endif %}
+
     {% block extra_css %}{% endblock %}
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 <body>
 
-    <!-- 1. SIDEBAR -->
-    <aside class="sidebar">
-        <div class="sidebar-brand">
-            <img src="{{ url_for('static', filename='images/barangayassist_logo.png') }}"
-                 alt="BarangayAssist Community Concern Portal"
-                 class="dashboard-logo">
-        </div>
+    {% set page_role = session.get('role', 'resident') %}
+    {% if page_role == 'staff' %}
+        {% set default_nav_title = 'BARANGAY STAFF' %}
+        {% set default_eyebrow = 'STAFF PORTAL' %}
+        {% set role_label = 'Barangay Staff' %}
+    {% else %}
+        {% set default_nav_title = 'RESIDENT' %}
+        {% set default_eyebrow = 'RESIDENT PORTAL' %}
+        {% set role_label = 'Resident' %}
+    {% endif %}
 
-        <nav class="sidebar-nav">
-            <a href="{{ url_for('dashboard') }}" class="nav-item {% block nav_dashboard %}active{% endblock %}">
-                <ion-icon name="grid-outline"></ion-icon> Dashboard
-            </a>
-            <a href="{{ url_for('submit_concern') }}" class="nav-item {% block nav_submit %}{% endblock %}">
-                <ion-icon name="document-text-outline"></ion-icon> Submit Concern
-            </a>
-            <a href="#" class="nav-item {% block nav_concerns %}{% endblock %}">
-                <ion-icon name="list-outline"></ion-icon> My Concerns
-            </a>
-            <a href="#" class="nav-item {% block nav_profile %}{% endblock %}">
-                <ion-icon name="person-outline"></ion-icon> Profile
-            </a>
-            <button class="nav-item theme-toggle" id="darkModeBtn">
-                <div class="theme-icon">
-                    <ion-icon name="moon-outline" id="darkModeIcon"></ion-icon>
-                </div>
-                <span id="darkModeText">Dark Mode</span>
-            </button>
-            <a href="{{ url_for('logout') }}" class="nav-item logout">
-                <ion-icon name="log-out-outline"></ion-icon> Logout
-            </a>
-        </nav>
+    {% if not is_admin_page %}
+    <div class="admin-dashboard">
 
-        <div class="sidebar-bottom">
-            <p class="sidebar-slogan">A Stronger Community Together</p>
-            <div class="sidebar-illustration">
-                <div class="hill hill-one"></div>
-                <div class="hill hill-two"></div>
-                <div class="mini-building">
-                    <div class="mini-roof"></div>
-                    <div class="mini-door"></div>
-                    <div class="mini-window window-one"></div>
-                    <div class="mini-window window-two"></div>
-                </div>
-                <div class="mini-tree tree-one"></div>
-                <div class="mini-tree tree-two"></div>
+        <aside class="admin-sidebar" id="adminSidebar">
+
+            <div class="admin-brand">
+                <img
+                    src="{{ url_for('static', filename='images/barangayassist_logo.png') }}"
+                    alt="BarangayAssist Community Concern Portal"
+                    class="dashboard-logo"
+                >
             </div>
-        </div>
-    </aside>
 
-    <!-- 2. MAIN CONTAINER -->
-    <div class="main">
-        <header class="topbar">
-            <button class="mobile-menu" id="mobileMenuBtn"><ion-icon name="menu-outline"></ion-icon></button>
+            <nav class="admin-nav">
 
-            <nav class="top-nav">
-                <a href="{{ url_for('dashboard') }}" class="top-nav-item {% block topnav_dashboard %}active{% endblock %}">
-                    <ion-icon name="grid-outline"></ion-icon> Dashboard
+                {% if page_role == 'staff' %}
+
+                <!-- ================= STAFF NAVIGATION ================= -->
+                <!-- Staff never see Submit Concern; their work is reviewing
+                     assigned concerns and updating their status. -->
+
+                <p class="nav-title">{% block nav_title %}{{ default_nav_title }}{% endblock %}</p>
+
+                <a href="{{ url_for('staff_dashboard') }}"
+                   class="admin-nav-link{% if request.endpoint == 'staff_dashboard' %} active{% endif %}">
+                    <ion-icon name="grid-outline"></ion-icon>
+                    <span>Dashboard</span>
                 </a>
-                <a href="{{ url_for('submit_concern') }}" class="top-nav-item {% block topnav_submit %}{% endblock %}">
-                    <ion-icon name="document-text-outline"></ion-icon> Submit Concern
+
+                <a href="{{ url_for('staff_concerns') }}"
+                   class="admin-nav-link{% if request.endpoint == 'staff_concerns' %} active{% endif %}">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                    <span>Assigned Concerns</span>
                 </a>
+
+                <a href="{{ url_for('staff_profile') }}"
+                   class="admin-nav-link{% if request.endpoint == 'staff_profile' %} active{% endif %}">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <span>Profile</span>
+                </a>
+
+                {% else %}
+
+                <!-- ================= RESIDENT NAVIGATION ================= -->
+
+                <p class="nav-title">{% block nav_title_resident %}{{ default_nav_title }}{% endblock %}</p>
+
+                <a href="{{ url_for('dashboard') }}"
+                   class="admin-nav-link{% if request.endpoint == 'dashboard' %} active{% endif %}">
+                    <ion-icon name="grid-outline"></ion-icon>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="{{ url_for('submit_concern') }}"
+                   class="admin-nav-link{% if request.endpoint == 'submit_concern' %} active{% endif %}">
+                    <ion-icon name="create-outline"></ion-icon>
+                    <span>Submit Concern</span>
+                </a>
+
+                <a href="{{ url_for('my_concerns') }}"
+                   class="admin-nav-link{% if request.endpoint == 'my_concerns' %} active{% endif %}">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                    <span>My Concerns</span>
+                </a>
+
+                <a href="{{ url_for('profile') }}"
+                   class="admin-nav-link{% if request.endpoint == 'profile' %} active{% endif %}">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <span>Profile</span>
+                </a>
+
+                {% endif %}
+
+                <button type="button"
+                        class="admin-nav-link admin-theme-toggle"
+                        id="adminDarkModeBtn">
+
+                    <ion-icon name="moon-outline" id="adminDarkModeIcon"></ion-icon>
+
+                    <span id="adminDarkModeText">Dark Mode</span>
+
+                </button>
+
+                <a href="{{ url_for('logout') }}"
+                   class="admin-nav-link logout-link">
+
+                    <ion-icon name="log-out-outline"></ion-icon>
+
+                    <span>Logout</span>
+
+                </a>
+
             </nav>
 
-            <div class="user-profile">
-                <div class="user-avatar"><ion-icon name="person-outline"></ion-icon></div>
-                <div class="user-info">
-                    <strong id="userDisplayName">{{ clean_name }}</strong>
-                    <span>Resident</span>
-                </div>
-                <ion-icon name="chevron-down-outline" class="user-arrow"></ion-icon>
-            </div>
-        </header>
+        </aside>
 
-        {% block content %}{% endblock %}
+        <main class="admin-main">
+
+            <header class="admin-topbar">
+
+                <button
+                    class="mobile-menu"
+                    id="mobileMenu"
+                    type="button"
+                    aria-label="Open menu">
+
+                    <ion-icon name="menu-outline"></ion-icon>
+
+                </button>
+
+                <div class="topbar-title">
+                    <span>{% block topbar_eyebrow %}{{ default_eyebrow }}{% endblock %}</span>
+                    <h1>{% block topbar_title %}Dashboard{% endblock %}</h1>
+                </div>
+
+                <div class="admin-profile">
+
+                    <div class="admin-avatar">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </div>
+
+                    <div class="admin-user-info">
+                        <strong>{{ clean_name }}</strong>
+                        <span>{{ role_label }}</span>
+                    </div>
+
+                    <ion-icon
+                        name="chevron-down-outline"
+                        class="profile-arrow"></ion-icon>
+
+                </div>
+
+            </header>
+
+            <div class="admin-content">
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages" role="status">
+            {% for category, message in messages %}
+            <div class="flash-message flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+    {% if not is_admin_page %}
+
+                <footer class="admin-footer">
+
+                    <span>
+                        © BarangayAssist. All rights reserved.
+                    </span>
+
+                    <em>
+                        Serbisyo sa Mamamayan
+                    </em>
+
+                </footer>
+
+            </div>
+
+        </main>
+
     </div>
 
-    <!-- Ionicons Script -->
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+    {% endif %}
 
-    <!-- Theme & Dynamic UI Scripts -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const darkModeBtn = document.getElementById('darkModeBtn');
-            const darkModeText = document.getElementById('darkModeText');
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const sidebar = document.querySelector('.sidebar');
-
-            function updateTheme(isDark) {
-                const currentIcon = document.getElementById('darkModeIcon');
-
-                if (isDark) {
-                    document.body.classList.add('dark-mode');
-                    if (darkModeText) darkModeText.textContent = 'Light Mode';
-
-                    if (currentIcon) {
-                        currentIcon.outerHTML = '<ion-icon name="sunny-outline" id="darkModeIcon"></ion-icon>';
-                    }
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    document.body.classList.remove('dark-mode');
-                    if (darkModeText) darkModeText.textContent = 'Dark Mode';
-
-                    if (currentIcon) {
-                        currentIcon.outerHTML = '<ion-icon name="moon-outline" id="darkModeIcon"></ion-icon>';
-                    }
-                    localStorage.setItem('theme', 'light');
-                }
-            }
-
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                updateTheme(true);
-            }
-
-            darkModeBtn?.addEventListener('click', () => {
-                const isDark = document.body.classList.contains('dark-mode');
-                updateTheme(!isDark);
-            });
-
-            const navItems = document.querySelectorAll('.sidebar-nav .nav-item:not(.theme-toggle):not(.logout)');
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-
-            mobileMenuBtn?.addEventListener('click', () => {
-                sidebar?.classList.toggle('open');
-            });
-        });
-    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

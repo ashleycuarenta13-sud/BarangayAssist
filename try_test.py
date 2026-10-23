@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 target = "http://127.0.0.1:5000/login"
 login_type = "email"
-login_value = "admin@barangayassist.local"
+login_value = "admin.barangayassist@gmail.com"
 password_field = "password"
 
 common_passwords = [

@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 DEFAULT_TARGET = "http://127.0.0.1:5000/login"
 DEFAULT_LOGIN_TYPE = "email"
-DEFAULT_LOGIN_VALUE = "admin@barangayassist.local"
+DEFAULT_LOGIN_VALUE = "admin.barangayassist@gmail.com"
 
 CONTROLLED_ATTEMPTS = 5
 

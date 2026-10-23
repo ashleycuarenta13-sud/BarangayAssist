@@ -247,7 +247,9 @@
     </section>
 
 
-    <div class="wrapper" id="wrapper">
+    <div class="wrapper" id="wrapper"
+         data-error="{{ request.args.get('error', '') }}"
+         data-registered="{{ '1' if request.args.get('registered') else '' }}">
         <span class="icon-close" id="iconClose"><ion-icon name="close"></ion-icon></span>
 
         <!-- Login Form -->
@@ -255,6 +257,15 @@
             <div class="form-eyebrow">Resident Access</div>
             <h2>Welcome, Resident!</h2>
             <p class="form-subtitle">Log in to file or track a concern with your barangay.</p>
+
+            <div class="registered-banner" id="registeredBanner" hidden>
+                <ion-icon name="checkmark-circle"></ion-icon>
+                <div>
+                    <strong>Account created!</strong>
+                    <span>You can now log in using your new account.</span>
+                </div>
+            </div>
+
             <form id="loginForm" action="{{ url_for('login') }}" method="POST" novalidate>
                 <div class="input-box" id="box-loginEmail">
                     <span class="icon"><ion-icon name="mail"></ion-icon></span>
@@ -276,7 +287,7 @@
                     <a href="#">Forgot Password?</a>
                 </div>
                 <button type="submit" class="btn">Log In</button>
-                <div class="form-status" id="loginStatus">{% if request.args.get('error') %}Invalid email or password.{% endif %}</div>
+                <div class="form-status" id="loginStatus"></div>
                 <div class="login-register">
                     <p>Don't have an account? <a href="#" class="register-link">Register here</a></p>
                 </div>

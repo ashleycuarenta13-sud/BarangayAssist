@@ -1,27 +1,22 @@
-document.addEventListener("DOMContentLoaded", function() {
 
-    // ASSIGNMENT FORM SUBMISSION
-    document.querySelectorAll(".assignment-form").forEach((form) => {
-        form.addEventListener("submit", function() {
-            const button = form.querySelector(".assign-btn");
-
-            if (!button) return;
-
-            button.disabled = true;
-            button.textContent = "Saving...";
-            button.setAttribute("aria-busy", "true");
-        });
-    });
-
-    // =========================================================
-    // DARK MODE / LIGHT MODE
-    // =========================================================
+document.addEventListener("DOMContentLoaded", function () {
+    const dashboard = document.querySelector(".admin-dashboard");
     const themeButton = document.getElementById("adminDarkModeBtn");
     const themeText = document.getElementById("adminDarkModeText");
     const themeIcon = document.getElementById("adminDarkModeIcon");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const sidebar = document.getElementById("adminSidebar");
 
+    // DARK MODE
+    // The CSS has TWO dark-mode selector systems: `body.dark-mode ...`
+    // (admin_dashboard.css final section + admin_pages.css) and
+    // `.admin-dashboard.dark-mode ...`. Toggle BOTH so every rule fires.
     function setTheme(isDark) {
         document.body.classList.toggle("dark-mode", isDark);
+
+        if (dashboard) {
+            dashboard.classList.toggle("dark-mode", isDark);
+        }
 
         if (themeText) {
             themeText.textContent = isDark ? "Light Mode" : "Dark Mode";
@@ -37,115 +32,195 @@ document.addEventListener("DOMContentLoaded", function() {
         localStorage.setItem("theme", isDark ? "dark" : "light");
     }
 
-    if (localStorage.getItem("theme") === "dark") {
-        setTheme(true);
-    }
+    setTheme(localStorage.getItem("theme") === "dark");
 
     if (themeButton) {
-        themeButton.addEventListener("click", function() {
+        themeButton.addEventListener("click", function (event) {
+            event.stopPropagation();
             setTheme(!document.body.classList.contains("dark-mode"));
         });
     }
 
-    // =========================================================
     // MOBILE SIDEBAR
-    // =========================================================
-    const mobileMenu = document.getElementById("mobileMenu");
-    const sidebar = document.getElementById("adminSidebar");
-
     if (mobileMenu && sidebar) {
-        mobileMenu.addEventListener("click", function() {
+        mobileMenu.addEventListener("click", function (event) {
+            event.stopPropagation();
             sidebar.classList.toggle("open");
+        });
+
+        document.addEventListener("click", function (event) {
+            if (
+                sidebar.classList.contains("open") &&
+                !sidebar.contains(event.target) &&
+                !mobileMenu.contains(event.target)
+            ) {
+                sidebar.classList.remove("open");
+            }
+        });
+
+        sidebar.querySelectorAll("a.admin-nav-link").forEach(function (link) {
+            link.addEventListener("click", function () {
+                sidebar.classList.remove("open");
+            });
         });
     }
 
-    // Close sidebar when clicking outside
-    document.addEventListener("click", function(event) {
-        if (!sidebar || !mobileMenu) return;
+    // ASSIGNMENT FORMS
+    document.querySelectorAll(".assignment-form").forEach(function (form) {
+        form.addEventListener("submit", function () {
+            const button = form.querySelector(".assign-btn");
 
-        if (
-            sidebar.classList.contains("open") &&
-            !sidebar.contains(event.target) &&
-            !mobileMenu.contains(event.target)
-        ) {
-            sidebar.classList.remove("open");
-        }
+            if (!button) return;
+
+            button.disabled = true;
+            button.textContent = "Saving...";
+            button.setAttribute("aria-busy", "true");
+        });
     });
 
-    // =========================================================
-    // CONCERN FILTERING
-    // =========================================================
+    // FILTER CONCERNS
     const filterButtons = document.querySelectorAll(".filter-btn");
-    const concernRows = document.querySelectorAll(".table-row");
 
-    filterButtons.forEach(function(button) {
-        button.addEventListener("click", function() {
+    function normalizeStatus(value) {
+        return (value || "").trim().toLowerCase().replace(/\s+/g, " ");
+    }
 
-            // Remove active class from other buttons
-            filterButtons.forEach(function(btn) {
-                btn.classList.remove("active");
-            });
+    function filterConcerns(status) {
+        const filter = normalizeStatus(status);
+        const rows = document.querySelectorAll(".table-row, .admin-concern-row");
 
-            // Activate clicked button
-            button.classList.add("active");
+        rows.forEach(function (row) {
+            const rowStatus = normalizeStatus(row.dataset.status);
+            const matches = filter === "all" || rowStatus === filter;
+            row.style.display = matches ? "" : "none";
+        });
 
-            const filter = button.dataset.filter;
+        filterButtons.forEach(function (button) {
+            button.classList.toggle(
+                "active",
+                normalizeStatus(button.dataset.filter || "all") === filter
+            );
+        });
+    }
 
-            // Filter concern rows
-            concernRows.forEach(function(row) {
-                const status = row.dataset.status;
-
-                if (filter === "all" || status === filter) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
+    filterButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            filterConcerns(button.dataset.filter || "all");
         });
     });
 
-    // =========================================================
-    // MANAGEMENT CARD CLICK & NAVIGATION
-    // =========================================================
-    const managementCards = document.querySelectorAll(".management-card");
+    // SEARCH CONCERNS
+    const noResults = document.getElementById("noSearchResults");
 
-    managementCards.forEach(function(card, index) {
+    function rowMatchesFilters(row) {
+        const searchInput = document.getElementById("searchConcern");
+        const searchText = searchInput
+            ? searchInput.value.trim().toLowerCase()
+            : "";
+        const rowText = row.textContent.toLowerCase();
+        const activeFilter = document.querySelector(".filter-btn.active");
+        const filter = normalizeStatus(
+            activeFilter ? activeFilter.dataset.filter : "all"
+        );
+        const rowStatus = normalizeStatus(row.dataset.status);
+        const matchesFilter = filter === "all" || rowStatus === filter;
+
+        return {
+            matches: rowText.includes(searchText) && matchesFilter,
+            hasSearch: searchText.length > 0
+        };
+    }
+
+    function searchConcerns() {
+        const rows = document.querySelectorAll(".table-row, .admin-concern-row");
+        let visible = 0;
+        let hasSearch = false;
+
+        rows.forEach(function (row) {
+            const result = rowMatchesFilters(row);
+            row.style.display = result.matches ? "" : "none";
+
+            if (result.hasSearch) hasSearch = true;
+            if (result.matches) visible++;
+        });
+
+        // Only surface the empty state when a search/filter is active,
+        // so the real "no data yet" empty state is not doubled up.
+        if (noResults) {
+            noResults.hidden = !(hasSearch && visible === 0);
+        }
+    }
+
+    const searchInput = document.getElementById("searchConcern");
+
+    if (searchInput) {
+        searchInput.addEventListener("input", searchConcerns);
+    }
+
+    // Re-run the search when a filter button is clicked so both stay in sync.
+    filterButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            if (searchInput) searchConcerns();
+        });
+    });
+
+    // Allow existing HTML onclick attributes to call these functions.
+    window.filterConcerns = filterConcerns;
+    window.searchConcerns = searchConcerns;
+
+    // MANAGEMENT CARDS
+    document.querySelectorAll(".management-card").forEach(function (card) {
+        const link = card.querySelector("a[href]");
+        const targetUrl = card.dataset.url || (link ? link.href : "");
+
+        if (!targetUrl) return;
+
         card.style.cursor = "pointer";
+        card.setAttribute("tabindex", "0");
+        card.setAttribute("role", "link");
 
-        card.addEventListener("click", function() {
+        function openManagementPage() {
+            window.location.href = targetUrl;
+        }
 
-            // Visual bounce effect
-            card.style.transform = "translateY(-3px)";
+        card.addEventListener("click", function (event) {
+            if (event.target.closest("button, a, select, form, input")) return;
+            openManagementPage();
+        });
 
-            setTimeout(function() {
-                card.style.transform = "";
-            }, 180);
-
-            // Redirect based on card order
-            if (index === 0) {
-                window.location.href = "users.php";
-            } else if (index === 1) {
-                window.location.href = "staff.php";
-            } else if (index === 2) {
-                window.location.href = "service_routing.php";
+        card.addEventListener("keydown", function (event) {
+            if (
+                (event.key === "Enter" || event.key === " ") &&
+                event.target === card
+            ) {
+                event.preventDefault();
+                openManagementPage();
             }
         });
     });
 
-    // =========================================================
-    // ROW CLICK TO VIEW CONCERN DETAILS
-    // =========================================================
-    concernRows.forEach(function(row) {
+    // CLICKABLE CONCERN ROWS
+    document.querySelectorAll(".table-row, .admin-concern-row").forEach(function (row) {
+        const targetUrl = row.dataset.url;
+
+        if (!targetUrl) return;
+
         row.style.cursor = "pointer";
+        row.setAttribute("tabindex", "0");
 
-        row.addEventListener("click", function() {
-            const concernId = row.dataset.id;
+        row.addEventListener("click", function (event) {
+            if (event.target.closest("button, a, select, form, input, textarea")) return;
+            window.location.href = targetUrl;
+        });
 
-            if (concernId) {
-                window.location.href =
-                    "view_concern.php?id=" + encodeURIComponent(concernId);
+        row.addEventListener("keydown", function (event) {
+            if (
+                (event.key === "Enter" || event.key === " ") &&
+                event.target === row
+            ) {
+                event.preventDefault();
+                window.location.href = targetUrl;
             }
         });
     });
-
 });

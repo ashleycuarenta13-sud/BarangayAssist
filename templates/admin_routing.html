@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% from '_admin_nav.html' import admin_sidebar, admin_topbar, admin_footer with context %}
+
+{% block title %}Service Routing - BarangayAssist{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+
+    {{ admin_sidebar('routing') }}
+
+    <main class="admin-main">
+
+        {{ admin_topbar('ADMINISTRATION', 'Service Routing') }}
+
+        <div class="admin-content">
+
+            <section class="admin-intro">
+                <div class="intro-text">
+                    <span class="section-label">SERVICE ROUTING</span>
+                    <h2>Where Each Concern Goes</h2>
+                    <p>
+                        Monitor how incoming concerns are distributed across
+                        categories, and clear the queue of reports that still
+                        need an assigned staff member.
+                    </p>
+                </div>
+                <div class="overview-icon">
+                    <ion-icon name="git-network-outline"></ion-icon>
+                </div>
+            </section>
+
+            <section class="stats-grid">
+                <div class="admin-stat-card total">
+                    <div class="stat-icon">
+                        <ion-icon name="git-network-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Active Routes</span>
+                        <strong>{{ categories|selectattr('total_count')|list|length }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card pending">
+                    <div class="stat-icon">
+                        <ion-icon name="alert-circle-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Unassigned</span>
+                        <strong>{{ unassigned|length }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card progress">
+                    <div class="stat-icon">
+                        <ion-icon name="people-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Staff Available</span>
+                        <strong>{{ staff_users|length }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card resolved">
+                    <div class="stat-icon">
+                        <ion-icon name="checkmark-circle-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Resolved</span>
+                        <strong>{{ categories|map(attribute='resolved_count')|sum }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="concerns-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <span class="section-label">BY CATEGORY</span>
+                        <h2>Route Breakdown</h2>
+                    </div>
+                </div>
+
+                <div class="table-header routing-cols">
+                    <span>CATEGORY</span>
+                    <span>TOTAL</span>
+                    <span>PENDING</span>
+                    <span>IN PROGRESS</span>
+                    <span>RESOLVED</span>
+                    <span>UNASSIGNED</span>
+                </div>
+
+                <div>
+                    {% for row in categories %}
+                    <div class="table-row routing-cols">
+                        <div class="concern-name">
+                            <div class="table-icon">
+                                <ion-icon name="git-network-outline"></ion-icon>
+                            </div>
+                            <div class="concern-text">
+                                <strong>{{ row.category }}</strong>
+                            </div>
+                        </div>
+
+                        <span class="category">{{ row.total_count or 0 }}</span>
+
+                        <span class="status pending-status">
+                            {{ row.pending_count or 0 }}
+                        </span>
+
+                        <span class="status in-progress-status">
+                            {{ row.in_progress_count or 0 }}
+                        </span>
+
+                        <span class="status resolved-status">
+                            {{ row.resolved_count or 0 }}
+                        </span>
+
+                        <span class="category {{ 'route-unassigned' if (row.unassigned_count or 0) else '' }}">
+                            {{ row.unassigned_count or 0 }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </section>
+
+            <section class="concerns-panel route-queue">
+
+                <div class="panel-header">
+                    <div>
+                        <span class="section-label">ACTION NEEDED</span>
+                        <h2>Needs Assignment</h2>
+                    </div>
+                    <div class="filter-area">
+                        <a class="filter-btn" href="{{ url_for('admin_concerns') }}">
+                            Open All Concerns
+                        </a>
+                    </div>
+                </div>
+
+                <div class="table-header queue-cols">
+                    <span>CONCERN</span>
+                    <span>CATEGORY</span>
+                    <span>RESIDENT</span>
+                    <span>STATUS</span>
+                    <span></span>
+                </div>
+
+                <div>
+                    {% for concern in unassigned %}
+                    <div class="table-row queue-cols">
+                        <div class="concern-name">
+                            <div class="table-icon">
+                                <ion-icon name="document-text-outline"></ion-icon>
+                            </div>
+                            <div class="concern-text">
+                                <strong>{{ concern.title }}</strong>
+                                <small>
+                                    Reference #{{ concern.id }}
+                                </small>
+                            </div>
+                        </div>
+
+                        <span class="category">{{ concern.category or 'General' }}</span>
+
+                        <span class="category">{{ concern.resident_name or 'Unknown' }}</span>
+
+                        <span class="status {{ (concern.status or 'Pending')|slugify }}-status">
+                            {{ concern.status or 'Pending' }}
+                        </span>
+
+                        <a class="route-assign-link"
+                           href="{{ url_for('admin_concerns') }}">
+                            Assign
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <ion-icon name="checkmark-circle-outline"></ion-icon>
+                        <h3>Queue is clear</h3>
+                        <p>
+                            Every submitted concern already has a staff
+                            member assigned to it.
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </section>
+
+            <section class="concerns-panel route-staff">
+
+                <div class="panel-header">
+                    <div>
+                        <span class="section-label">LOAD BALANCE</span>
+                        <h2>Staff Capacity</h2>
+                    </div>
+                </div>
+
+                <div class="route-staff-grid">
+                    {% for member in staff_users %}
+                    <div class="route-staff-card">
+                        <div class="route-staff-head">
+                            <ion-icon name="person-outline"></ion-icon>
+                            <strong>{{ member.name }}</strong>
+                        </div>
+                        <div class="route-staff-meta">
+                            <span>{{ member.assigned_count or 0 }} assigned</span>
+                            <span class="route-staff-open">
+                                {{ (total_concerns or 0) - (member.assigned_count or 0) }} unassigned pool
+                            </span>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <h3>No staff accounts</h3>
+                        <p>Add staff from the Barangay Staff page first.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </section>
+
+            {{ admin_footer() }}
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+{% endblock %}

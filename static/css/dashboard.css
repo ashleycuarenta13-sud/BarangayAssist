@@ -798,7 +798,8 @@ body.dark-mode .category {
     white-space: nowrap;
 }
 
-.progress-status {
+.progress-status,
+.in-progress-status {
     background: var(--blue-light);
     color: #166ab3;
 }
@@ -1945,4 +1946,59 @@ body.dark-mode .input-box .icon {
 
 body.dark-mode .input-box .field-error {
     color: #f1a49b;
+}
+
+/* =====================================================
+   FLASH MESSAGES (server-side feedback)
+   ===================================================== */
+
+.flash-messages {
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: min(420px, 90%);
+}
+
+.flash-message {
+    padding: 12px 16px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+    animation: flashIn 0.25s ease;
+}
+
+@keyframes flashIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.flash-success {
+    background: #ddf2e2;
+    color: #19763c;
+    border: 1px solid #b6e0c4;
+}
+
+.flash-error {
+    background: #fbeae8;
+    color: #b3261e;
+    border: 1px solid #f0c4be;
+}
+
+body.dark-mode .flash-success {
+    background: #21432f;
+    color: #a7d8b5;
+    border-color: #2d5c3f;
+}
+
+body.dark-mode .flash-error {
+    background: #4a1f1c;
+    color: #f1a49b;
+    border-color: #6b2e28;
 }

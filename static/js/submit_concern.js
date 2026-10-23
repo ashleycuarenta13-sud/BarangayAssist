@@ -1,31 +1,49 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('.submit-card form');
+
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector(".submit-card form");
 
     if (!form) return;
 
-    const title = document.getElementById('title');
-    const category = document.getElementById('category');
-    const description = document.getElementById('description');
+    const title = document.getElementById("title");
+    const category = document.getElementById("category");
+    const description = document.getElementById("description");
     const submitButton = form.querySelector('button[type="submit"]');
 
-    const fields = [{
+    // Preselect a category if the page URL contains ?category=...
+    if (category) {
+        const params = new URLSearchParams(window.location.search);
+        const requestedCategory = params.get("category");
+
+        if (requestedCategory) {
+            const matchingOption = Array.from(category.options).find(function (option) {
+                return option.value.toLowerCase() === requestedCategory.toLowerCase();
+            });
+
+            if (matchingOption) {
+                category.value = matchingOption.value;
+            }
+        }
+    }
+
+    const fields = [
+        {
             input: title,
-            box: document.getElementById('box-title'),
-            message: 'Please enter a short title for your concern.'
+            box: document.getElementById("box-title"),
+            message: "Please enter a short title for your concern."
         },
         {
             input: description,
-            box: document.getElementById('box-description'),
-            message: 'Please describe the concern before submitting.'
+            box: document.getElementById("box-description"),
+            message: "Please describe the concern before submitting."
         }
     ];
 
     function clearError(field) {
         if (!field.box) return;
 
-        field.box.classList.remove('is-invalid');
+        field.box.classList.remove("is-invalid");
 
-        const error = field.box.querySelector('.field-error');
+        const error = field.box.querySelector(".field-error");
 
         if (error) {
             error.remove();
@@ -37,33 +55,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!field.box) return;
 
-        field.box.classList.add('is-invalid');
+        field.box.classList.add("is-invalid");
 
-        const error = document.createElement('small');
-        error.className = 'field-error';
+        const error = document.createElement("small");
+        error.className = "field-error";
         error.textContent = field.message;
 
         field.box.appendChild(error);
     }
 
-    // Clear errors when the user edits a field
-    fields.forEach((field) => {
-        if (field.input) {
-            field.input.addEventListener('input', () => {
-                clearError(field);
-            });
+    // Clear field errors as the user edits.
+    fields.forEach(function (field) {
+        if (!field.input) return;
 
-            field.input.addEventListener('change', () => {
+        field.input.addEventListener("input", function () {
+            if (field.input.value.trim()) {
                 clearError(field);
-            });
-        }
+            }
+        });
+
+        field.input.addEventListener("change", function () {
+            if (field.input.value.trim()) {
+                clearError(field);
+            }
+        });
     });
 
-    // Validate the form before submitting
-    form.addEventListener('submit', (event) => {
+    // Validate before submitting.
+    form.addEventListener("submit", function (event) {
         let valid = true;
 
-        fields.forEach((field) => {
+        fields.forEach(function (field) {
             if (!field.input || !field.input.value.trim()) {
                 showError(field);
                 valid = false;
@@ -80,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
 
             const firstInvalid = form.querySelector(
-                '.is-invalid input, .is-invalid textarea'
+                ".is-invalid input, .is-invalid textarea"
             );
 
             if (firstInvalid) {
@@ -92,11 +114,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Show submitting state
+        // Show the submitting state.
         if (submitButton) {
             submitButton.disabled = true;
-            submitButton.classList.add('is-submitting');
-            submitButton.setAttribute('aria-busy', 'true');
+            submitButton.setAttribute("aria-busy", "true");
+            submitButton.classList.add("is-submitting");
             submitButton.innerHTML =
                 '<ion-icon name="sync-outline"></ion-icon> Submitting...';
         }

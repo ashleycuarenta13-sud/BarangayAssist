@@ -1,0 +1,415 @@
+{% extends 'base.html' %}
+{% from '_admin_nav.html' import admin_sidebar, admin_topbar, admin_footer with context %}
+
+{% block title %}All Concerns - BarangayAssist{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-dashboard">
+
+    {{ admin_sidebar('concerns') }}
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="admin-main">
+
+
+        {{ admin_topbar('ADMINISTRATION', 'Concern Management') }}
+
+
+        <!-- ================= CONTENT ================= -->
+
+        <div class="admin-content">
+
+
+            <!-- ================= INTRO ================= -->
+
+            <section class="admin-intro">
+
+                <div class="intro-text">
+
+                    <span class="section-label">
+                        ADMINISTRATION
+                    </span>
+
+
+                    <h2>
+                        All Concerns
+                    </h2>
+
+
+                    <p>
+                        Review resident concerns and assign them
+                        to barangay staff.
+                    </p>
+
+                </div>
+
+
+                <div class="overview-icon">
+
+                    <ion-icon
+                        name="document-text-outline">
+                    </ion-icon>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= STATISTICS ================= -->
+
+            <section class="stats-grid">
+
+
+                <div class="admin-stat-card total">
+
+                    <div class="stat-icon">
+
+                        <ion-icon
+                            name="document-text-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="stat-info">
+
+                        <span>
+                            Total Concerns
+                        </span>
+
+                        <strong>
+                            {{ concerns|length }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-stat-card pending">
+
+                    <div class="stat-icon">
+
+                        <ion-icon
+                            name="time-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="stat-info">
+
+                        <span>
+                            Pending
+                        </span>
+
+                        <strong>
+                            {{ concerns|selectattr('status', 'equalto', 'Pending')|list|length }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-stat-card progress">
+
+                    <div class="stat-icon">
+
+                        <ion-icon
+                            name="sync-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="stat-info">
+
+                        <span>
+                            In Progress
+                        </span>
+
+                        <strong>
+                            {{ concerns|selectattr('status', 'equalto', 'In Progress')|list|length }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-stat-card resolved">
+
+                    <div class="stat-icon">
+
+                        <ion-icon
+                            name="checkmark-circle-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="stat-info">
+
+                        <span>
+                            Resolved
+                        </span>
+
+                        <strong>
+                            {{ concerns|selectattr('status', 'equalto', 'Resolved')|list|length }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= CONCERNS PANEL ================= -->
+
+            <section class="concerns-panel">
+
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <span class="section-label">
+                            ALL CONCERNS
+                        </span>
+
+                        <h2>
+                            Concern Management
+                        </h2>
+
+                    </div>
+
+
+                    <div class="filter-area">
+
+                        <input
+                            id="searchConcern"
+                            type="search"
+                            class="concern-search-input"
+                            placeholder="Search concerns, residents, or categories..."
+                            aria-label="Search concerns">
+
+                        <button
+                            class="filter-btn active"
+                            data-filter="all"
+                            type="button">
+
+                            All
+
+                        </button>
+
+
+                        <button
+                            class="filter-btn"
+                            data-filter="Pending"
+                            type="button">
+
+                            Pending
+
+                        </button>
+
+
+                        <button
+                            class="filter-btn"
+                            data-filter="In Progress"
+                            type="button">
+
+                            In Progress
+
+                        </button>
+
+
+                        <button
+                            class="filter-btn"
+                            data-filter="Resolved"
+                            type="button">
+
+                            Resolved
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TABLE HEADER -->
+
+                <div class="table-header">
+
+                    <span>
+                        CONCERN
+                    </span>
+
+                    <span>
+                        RESIDENT
+                    </span>
+
+                    <span>
+                        STATUS
+                    </span>
+
+                    <span>
+                        ASSIGNED STAFF
+                    </span>
+
+                    <span></span>
+
+                </div>
+
+
+                <!-- TABLE ROWS -->
+
+                <div id="concernList">
+
+                    {% for concern in concerns %}
+
+                    <div
+                        class="table-row"
+                        data-status="{{ concern.status }}"
+                        data-url="{{ url_for('admin_concerns') }}">
+
+
+                        <div class="concern-name">
+
+                            <div class="table-icon">
+
+                                <ion-icon
+                                    name="document-text-outline">
+                                </ion-icon>
+
+                            </div>
+
+
+                            <div class="concern-text">
+
+                                <strong>
+                                    {{ concern.title or 'Untitled concern' }}
+                                </strong>
+
+                                <small>
+                                    Reference #{{ concern.id }} &middot; {{ concern.category or 'Uncategorized' }}
+                                </small>
+
+                                <small>
+                                    {{ concern.description|truncatewords(12) }}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <span class="category">
+
+                            {{ concern.resident_name or 'Unknown resident' }}
+
+                        </span>
+
+
+                        <span
+                            class="status {{ (concern.status or 'Pending')|slugify }}-status">
+
+                            {{ (concern.status or 'Pending')|replace('_', ' ')|title }}
+
+                        </span>
+
+
+                        <form
+                            class="assignment-form"
+                            method="POST"
+                            action="{{ url_for('admin_assign_concern', concern_id=concern.id) }}">
+
+                            <input type="hidden" name="next" value="admin_concerns">
+
+                            <select name="assigned_staff_id" aria-label="Assign staff">
+                                <option value="">Unassigned</option>
+                                {% for staff in staff_users %}
+                                <option
+                                    value="{{ staff.id }}"
+                                    {% if concern.assigned_staff_id|string == staff.id|string %}selected{% endif %}>
+                                    {{ staff.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+
+                            <button type="submit" class="assign-btn">Assign</button>
+                        </form>
+
+
+                        <button
+                            class="row-action"
+                            type="button"
+                            aria-label="Concern actions">
+
+                            <ion-icon
+                                name="chevron-forward-outline">
+                            </ion-icon>
+
+                        </button>
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="empty-state">
+
+                        <ion-icon
+                            name="document-outline">
+                        </ion-icon>
+
+                        <h3>
+                            No concerns yet
+                        </h3>
+
+                        <p>
+                            Community concerns will appear here
+                            once residents submit them.
+                        </p>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <p id="noSearchResults" class="empty-state" hidden>
+
+                    <ion-icon name="search-outline"></ion-icon>
+
+                    <h3>No matching concerns</h3>
+
+                    <p>No concerns match your search or selected status.</p>
+
+                </p>
+
+            </section>
+
+
+            <!-- ================= FOOTER ================= -->
+
+            {{ admin_footer() }}
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+
+{% endblock %}

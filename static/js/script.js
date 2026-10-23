@@ -103,8 +103,83 @@ function toggleVis(id) {
 
 
 // ==============================
-// ERROR HANDLER
+// SERVER-SIDE ERROR HANDLER
+// Maps backend ?error= codes to the right form + message.
 // ==============================
+
+const ERROR_MESSAGES = {
+    // Login errors
+    invalid_login: { form: 'login', message: 'Invalid email or password.' },
+    missing_fields_login: { form: 'login', message: 'Please fill in both email and password.' },
+
+    // Registration errors
+    email_exists: { form: 'register', message: 'That email address is already registered.' },
+    invalid_email: { form: 'register', message: 'Please enter a valid email address.' },
+    missing_fields: { form: 'register', message: 'Please fill in all required fields.' },
+    invalid_input: { form: 'register', message: 'Please check your entries and try again.' }
+};
+
+function showServerError(code) {
+    if (!code) return;
+
+    const wrapperEl = document.getElementById('wrapper');
+    const loginStatus = document.getElementById('loginStatus');
+    const registerStatus = document.getElementById('registerStatus');
+
+    // Only open the popup if it isn't already visible.
+    if (wrapperEl && !wrapperEl.classList.contains('active-popup')) {
+        wrapperEl.classList.add('active-popup');
+        document.body.classList.add('active-popup');
+    }
+
+    const entry = ERROR_MESSAGES[code];
+
+    if (entry && entry.form === 'register') {
+        if (wrapperEl) wrapperEl.classList.add('active');
+
+        if (registerStatus) {
+            registerStatus.textContent = entry.message;
+            registerStatus.classList.add('bad', 'show');
+        }
+    } else {
+        if (wrapperEl) wrapperEl.classList.remove('active');
+
+        const message = entry ? entry.message : 'Invalid email or password.';
+
+        if (loginStatus) {
+            loginStatus.textContent = message;
+            loginStatus.classList.add('bad', 'show');
+        }
+    }
+}
+
+// Kick off as soon as the script runs (it is loaded at the end of <body>).
+const wrapperRoot = document.getElementById('wrapper');
+showServerError(wrapperRoot ? wrapperRoot.dataset.error : '');
+
+
+// ==============================
+// REGISTRATION SUCCESS NOTICE
+// ==============================
+
+function showRegisteredNotice(flag) {
+    if (!flag) return;
+
+    const wrapperEl = document.getElementById('wrapper');
+    const banner = document.getElementById('registeredBanner');
+
+    // Open the popup on the LOGIN side (no 'active' class = login form).
+    if (wrapperEl && !wrapperEl.classList.contains('active-popup')) {
+        wrapperEl.classList.add('active-popup');
+        document.body.classList.add('active-popup');
+    }
+
+    if (wrapperEl) wrapperEl.classList.remove('active');
+
+    if (banner) banner.hidden = false;
+}
+
+showRegisteredNotice(wrapperRoot ? wrapperRoot.dataset.registered : '');
 
 function setError(id, show) {
     const box = document.getElementById('box-' + id);

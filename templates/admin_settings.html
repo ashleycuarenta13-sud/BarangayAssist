@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% from '_admin_nav.html' import admin_sidebar, admin_topbar, admin_footer with context %}
+
+{% block title %}Settings - BarangayAssist{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+
+    {{ admin_sidebar('settings') }}
+
+    <main class="admin-main">
+
+        {{ admin_topbar('SYSTEM', 'Settings') }}
+
+        <div class="admin-content">
+
+            <section class="admin-intro">
+                <div class="intro-text">
+                    <span class="section-label">SYSTEM SETTINGS</span>
+                    <h2>Account Security</h2>
+                    <p>
+                        Update the credentials for this administrator account.
+                        Changes take effect the next time you log in.
+                    </p>
+                </div>
+                <div class="overview-icon">
+                    <ion-icon name="settings-outline"></ion-icon>
+                </div>
+            </section>
+
+            <div class="report-grid settings-grid">
+
+                <section class="concerns-panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="section-label">SIGN-IN</span>
+                            <h2>Change Password</h2>
+                        </div>
+                    </div>
+
+                    <form class="settings-form"
+                          method="POST"
+                          action="{{ url_for('admin_settings') }}"
+                          novalidate>
+
+                        <div class="settings-field">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password"
+                                   id="currentPassword"
+                                   name="current_password"
+                                   autocomplete="current-password"
+                                   required>
+                        </div>
+
+                        <div class="settings-field">
+                            <label for="newPassword">New Password</label>
+                            <input type="password"
+                                   id="newPassword"
+                                   name="new_password"
+                                   autocomplete="new-password"
+                                   minlength="8"
+                                   required>
+                            <small>At least 8 characters.</small>
+                        </div>
+
+                        <div class="settings-field">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password"
+                                   id="confirmPassword"
+                                   name="confirm_password"
+                                   autocomplete="new-password"
+                                   minlength="8"
+                                   required>
+                        </div>
+
+                        <button type="submit" class="settings-submit">
+                            Save Changes
+                        </button>
+                    </form>
+                </section>
+
+                <section class="concerns-panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="section-label">ACCOUNT</span>
+                            <h2>Current Session</h2>
+                        </div>
+                    </div>
+
+                    <div class="settings-summary">
+                        <div class="settings-summary-row">
+                            <span>Signed in as</span>
+                            <strong>{{ clean_name }}</strong>
+                        </div>
+                        <div class="settings-summary-row">
+                            <span>Email</span>
+                            <strong>{{ admin_email or 'Not on file' }}</strong>
+                        </div>
+                        <div class="settings-summary-row">
+                            <span>Role</span>
+                            <strong>Barangay Administrator</strong>
+                        </div>
+                    </div>
+
+                    <div class="settings-note">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <p>
+                            Passwords are stored one-way. Nobody, including
+                            barangay staff, can read your password back.
+                        </p>
+                    </div>
+                </section>
+
+            </div>
+
+            {{ admin_footer() }}
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin_settings.js') }}"></script>
+{% endblock %}

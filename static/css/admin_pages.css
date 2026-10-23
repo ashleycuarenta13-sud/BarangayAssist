@@ -1,0 +1,833 @@
+/* ============================================================
+   BARANGAYASSIST — ADMIN SUB-PAGES
+   Users, Barangay Staff, Service Routing, Reports, Settings.
+   Extends admin_dashboard.css (loaded first).
+   ============================================================ */
+
+/* ---- Shared table grid ------------------------------------------- */
+
+.admin-table-cols {
+    grid-template-columns: 2.2fr 1.2fr 1.1fr 1fr 0.9fr;
+    align-items: center;
+    gap: 15px;
+}
+
+.routing-cols {
+    grid-template-columns: 2fr 0.7fr 0.8fr 0.9fr 0.8fr 0.9fr;
+    align-items: center;
+    gap: 15px;
+}
+
+.queue-cols {
+    grid-template-columns: 2.2fr 1.1fr 1.1fr 1fr 90px;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-user-row,
+.admin-staff-row {
+    display: grid;
+    padding: 14px 23px;
+    border-top: 1px solid #edf0ee;
+    transition: background 0.2s ease;
+}
+
+.admin-user-row:hover,
+.admin-staff-row:hover {
+    background: #fafcfb;
+}
+
+/* ---- Role badges ------------------------------------------------- */
+
+.role-badge {
+    justify-self: start;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-stat-card .stat-info strong {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Admin role reuses the resolved palette, staff reuses pending. */
+.status.admin-status,
+.status.resident-status,
+.status.staff-status {
+    background: #edf3ef;
+    color: #2f6f5e;
+}
+
+.status.admin-status {
+    background: #fdf3dd;
+    color: #9a6b12;
+}
+
+/* ---- Empty search note ------------------------------------------- */
+
+.admin-empty-note {
+    padding: 20px 23px;
+    border-top: 1px solid #edf0ee;
+    color: #73827b;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* ---- Report grid ------------------------------------------------- */
+
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+    margin-top: 22px;
+}
+
+.report-secondary {
+    margin-top: 22px;
+}
+
+/* ---- Bar charts -------------------------------------------------- */
+
+.report-bars {
+    padding: 18px 23px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.report-bar-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.report-bar-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 12px;
+}
+
+.report-bar-label span {
+    color: #1d2b24;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.report-bar-label strong {
+    color: #0d2219;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+}
+
+.report-bar-row small {
+    color: #73827b;
+    font-size: 10px;
+}
+
+.report-bar-track {
+    height: 8px;
+    background: #edf3ef;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.report-bar-fill {
+    height: 100%;
+    background: #2f6f5e;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+    min-width: 3px;
+}
+
+.report-bar-fill.gold {
+    background: #d9a441;
+}
+
+.report-bar-fill.blue {
+    background: #3b8edb;
+}
+
+/* ---- Ranked list (top reporters) --------------------------------- */
+
+.report-list {
+    padding: 12px 23px 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.report-list-row {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 0;
+    border-bottom: 1px solid #edf0ee;
+}
+
+.report-list-row:last-child {
+    border-bottom: none;
+}
+
+.report-rank {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #edf3ef;
+    color: #2f6f5e;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.report-list-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.report-list-body strong {
+    display: block;
+    font-size: 12px;
+    color: #1d2b24;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.report-list-body small {
+    display: block;
+    color: #73827b;
+    font-size: 10px;
+}
+
+.report-list-count {
+    flex-shrink: 0;
+    font-size: 10px;
+    color: #73827b;
+    font-family: "IBM Plex Mono", monospace;
+}
+
+/* ---- Routing helpers --------------------------------------------- */
+
+.route-unassigned {
+    background: #fbeae8;
+    color: #b3261e;
+    font-weight: 700;
+}
+
+.route-queue,
+.route-staff {
+    margin-top: 22px;
+}
+
+.route-assign-link {
+    justify-self: start;
+    display: inline-block;
+    padding: 7px 13px;
+    border: 1px solid #2f6f5e;
+    border-radius: 7px;
+    color: #2f6f5e;
+    font-size: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: 0.2s ease;
+}
+
+.route-assign-link:hover {
+    background: #0d2219;
+    border-color: #0d2219;
+    color: #ffffff;
+}
+
+.route-staff-grid {
+    padding: 18px 23px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 13px;
+}
+
+.route-staff-card {
+    border: 1px solid #e3e9e5;
+    border-radius: 10px;
+    padding: 14px 15px;
+    background: #ffffff;
+}
+
+.route-staff-head {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 9px;
+}
+
+.route-staff-head ion-icon {
+    color: #2f6f5e;
+    font-size: 17px;
+}
+
+.route-staff-head strong {
+    font-size: 12px;
+    color: #1d2b24;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.route-staff-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 10px;
+    color: #73827b;
+}
+
+.route-staff-open {
+    color: #9a6b12;
+}
+
+/* ---- Settings form ------------------------------------------------ */
+
+.settings-grid {
+    margin-top: 22px;
+}
+
+.settings-form {
+    padding: 20px 23px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.settings-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.settings-field label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #1d2b24;
+    letter-spacing: 0.3px;
+}
+
+.settings-field input {
+    padding: 11px 13px;
+    border: 1px solid #e3e9e5;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1d2b24;
+    font-size: 13px;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.settings-field input:focus {
+    border-color: #2f6f5e;
+    box-shadow: 0 0 0 3px rgba(47, 111, 94, 0.15);
+}
+
+.settings-field input.is-invalid {
+    border-color: #b3261e;
+    box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.14);
+}
+
+.settings-field small {
+    color: #73827b;
+    font-size: 10px;
+}
+
+.settings-field .field-error {
+    color: #b3261e;
+    font-size: 11px;
+}
+
+.settings-submit {
+    align-self: flex-start;
+    padding: 11px 22px;
+    border: none;
+    border-radius: 8px;
+    background: #d9a441;
+    color: #172a23;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.settings-submit:hover {
+    background: #f1c75b;
+}
+
+.settings-submit:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.settings-summary {
+    padding: 18px 23px;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.settings-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #edf0ee;
+    font-size: 12px;
+}
+
+.settings-summary-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.settings-summary-row span {
+    color: #73827b;
+}
+
+.settings-summary-row strong {
+    color: #1d2b24;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.settings-note {
+    margin: 0 23px 20px;
+    padding: 13px 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    border: 1px solid #e3e9e5;
+    border-radius: 9px;
+    background: #fafcfb;
+}
+
+.settings-note ion-icon {
+    color: #2f6f5e;
+    font-size: 17px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.settings-note p {
+    font-size: 11px;
+    line-height: 1.55;
+    color: #73827b;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1180px) {
+    .report-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1050px) {
+
+    /* Collapse secondary columns, keep the primary identity column. */
+    .admin-table-cols,
+    .routing-cols,
+    .queue-cols {
+        grid-template-columns: 1.6fr 1fr;
+    }
+
+    .admin-table-cols > :nth-child(n+3),
+    .routing-cols > :nth-child(n+3),
+    .queue-cols > :nth-child(n+3) {
+        display: none;
+    }
+
+    .admin-user-row,
+    .admin-staff-row {
+        padding: 13px 18px;
+    }
+}
+
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+
+body.dark-mode .admin-user-row,
+body.dark-mode .admin-staff-row {
+    border-color: #2d493d;
+}
+
+body.dark-mode .admin-user-row:hover,
+body.dark-mode .admin-staff-row:hover {
+    background: #163026;
+}
+
+body.dark-mode .admin-empty-note {
+    color: #9db3aa;
+    border-color: #2d493d;
+}
+
+body.dark-mode .report-bar-label span,
+body.dark-mode .report-list-body strong {
+    color: #e6efe9;
+}
+
+body.dark-mode .report-bar-label strong {
+    color: #ffffff;
+}
+
+body.dark-mode .report-bar-track {
+    background: #24433a;
+}
+
+body.dark-mode .report-rank {
+    background: #24433a;
+    color: #a9d6bd;
+}
+
+body.dark-mode .report-list-row {
+    border-color: #2d493d;
+}
+
+body.dark-mode .report-list-count,
+body.dark-mode .report-bar-row small,
+body.dark-mode .report-list-body small {
+    color: #9db3aa;
+}
+
+body.dark-mode .route-staff-card {
+    background: #163026;
+    border-color: #2d493d;
+}
+
+body.dark-mode .route-staff-head strong {
+    color: #e6efe9;
+}
+
+body.dark-mode .route-assign-link {
+    border-color: #4f9f78;
+    color: #a9d6bd;
+}
+
+body.dark-mode .route-assign-link:hover {
+    background: #a9d6bd;
+    border-color: #a9d6bd;
+    color: #0d2219;
+}
+
+body.dark-mode .route-unassigned {
+    background: #4a1f1c;
+    color: #f1a49b;
+}
+
+body.dark-mode .settings-field label {
+    color: #e6efe9;
+}
+
+body.dark-mode .settings-field input {
+    background: #0d2219;
+    border-color: #2d493d;
+    color: #e6efe9;
+}
+
+body.dark-mode .settings-field input:focus {
+    border-color: #4f9f78;
+}
+
+body.dark-mode .settings-summary-row {
+    border-color: #2d493d;
+}
+
+body.dark-mode .settings-summary-row strong {
+    color: #e6efe9;
+}
+
+body.dark-mode .settings-note {
+    background: #163026;
+    border-color: #2d493d;
+}
+
+body.dark-mode .settings-note p {
+    color: #9db3aa;
+}
+
+/* ==================================================
+   ACTIVE NAV CONTRAST GUARD
+   admin_dashboard.css has `.admin-sidebar a:hover { color: #D9A441 }`
+   (specificity 0,3,1) which BEATS `.admin-nav-link.active { color: #091812 }`
+   (0,3,0). Hovering the active item turned the label gold on the gold
+   pill = invisible text. These late, higher-specificity rules pin a
+   readable fg/bg pair for both themes, hover included.
+   ================================================== */
+
+.admin-dashboard .admin-nav-link.active,
+.admin-dashboard .admin-sidebar a.active,
+.admin-dashboard .admin-nav-link.active:hover,
+.admin-dashboard .admin-sidebar a.active:hover,
+.admin-dashboard .admin-nav-link.active ion-icon,
+.admin-dashboard .admin-sidebar a.active ion-icon {
+    background: #d9a441;
+    color: #091812;
+}
+
+body.dark-mode .admin-dashboard .admin-nav-link.active,
+body.dark-mode .admin-dashboard .admin-sidebar a.active,
+body.dark-mode .admin-dashboard .admin-nav-link.active:hover,
+body.dark-mode .admin-dashboard .admin-sidebar a.active:hover,
+body.dark-mode .admin-dashboard .admin-nav-link.active ion-icon,
+body.dark-mode .admin-dashboard .admin-sidebar a.active ion-icon {
+    background: #1b3a30;
+    color: #ffffff;
+}
+
+/* ==================================================
+   RESIDENT PAGES — ADMIN DESIGN SYSTEM REUSE
+   ================================================== */
+
+/* The resident concern table has 4 columns (no staff/action columns),
+   so its grid must not inherit the admin table's track layout. */
+.resident-table .table-header,
+.resident-table .table-row {
+    grid-template-columns: minmax(180px, 2fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(110px, 1fr);
+}
+
+@media (max-width: 760px) {
+    .resident-table .table-header,
+    .resident-table .table-row {
+        grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    }
+}
+
+/* Empty-state call to action on the resident dashboard. */
+.empty-state-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    color: var(--admin-accent, #2f6f5e);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.empty-state-link:hover {
+    color: var(--admin-gold, #d9a441);
+}
+
+/* Quick-action category cards on the resident dashboard. */
+.resident-quick-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 14px;
+    padding: 6px 0 10px;
+}
+
+.resident-quick-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--admin-border, #e3e9e5);
+    border-radius: 14px;
+    background: var(--admin-surface, #ffffff);
+    color: var(--admin-text, #183229);
+    text-decoration: none;
+    font-size: 14px;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.resident-quick-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--admin-gold, #d9a441);
+    box-shadow: 0 8px 18px rgba(7, 63, 49, 0.08);
+}
+
+.resident-quick-card .quick-icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #fff5dc;
+    color: #b98518;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+/* ---- Resident profile page ------------------------------------- */
+
+.profile-body {
+    padding: 20px 4px 8px;
+}
+
+.profile-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 18px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--admin-border, #e3e9e5);
+}
+
+.profile-head .management-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
+}
+
+.profile-head-text strong {
+    display: block;
+    font-size: 18px;
+    color: var(--admin-text, #183229);
+}
+
+.profile-head-text span {
+    display: block;
+    margin-top: 3px;
+    font-size: 13px;
+    color: var(--admin-muted, #73827b);
+}
+
+body.dark-mode .profile-head {
+    border-color: #2d493d;
+}
+
+body.dark-mode .profile-head-text strong {
+    color: #e6efe9;
+}
+
+.profile-stats {
+    padding: 16px 0 8px;
+}
+
+/* ---- Staff portal tables ---------------------------------------- */
+
+.staff-table .table-header,
+.staff-table .table-row {
+    grid-template-columns:
+        minmax(0, 2.1fr)
+        minmax(0, 1fr)
+        minmax(0, .95fr)
+        minmax(0, .85fr)
+        minmax(0, 1.2fr);
+}
+
+@media (max-width: 1100px) {
+    .staff-table .table-header,
+    .staff-table .table-row {
+        grid-template-columns:
+            minmax(0, 1.7fr)
+            minmax(0, .8fr)
+            minmax(0, .8fr)
+            minmax(0, .7fr)
+            minmax(0, 1.15fr);
+    }
+}
+
+@media (max-width: 800px) {
+    .staff-table .table-header {
+        display: none;
+    }
+    .staff-table .table-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 14px;
+    }
+    .staff-table .table-row .concern-name,
+    .staff-table .staff-action {
+        grid-column: 1 / -1;
+    }
+}
+
+.staff-table .resident-name {
+    font-size: 12px;
+    color: var(--admin-text, #183229);
+    overflow-wrap: anywhere;
+}
+
+/* Status update control (staff work tool) */
+
+.staff-action {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-width: 0;
+}
+
+.staff-action select {
+    flex: 1 1 96px;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--admin-border, #e3e9e5);
+    border-radius: 7px;
+    background: var(--admin-surface, #ffffff);
+    color: var(--admin-text, #183229);
+    font-size: 12px;
+}
+
+.staff-action .save-btn {
+    flex: 1 1 auto;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 7px;
+    background: #0D2219;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.staff-action .save-btn:hover {
+    background: #D9A441;
+    color: #091812;
+}
+
+.staff-action .save-btn:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+body.dark-mode .staff-action select {
+    background: var(--admin-surface, #172a23);
+    color: var(--admin-text, #dce8e2);
+    border-color: var(--admin-border, #2d493d);
+}
+
+body.dark-mode .staff-action .save-btn {
+    background: #D9A441;
+    color: #091812;
+}
+
+body.dark-mode .staff-action .save-btn:hover {
+    background: #ffffff;
+}
+
+/* Staff role badge (profile page) */
+
+.staff-role-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #0D2219;
+    color: #D9A441;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .3px;
+}
+
+body.dark-mode .staff-role-badge {
+    border: 1px solid rgba(217, 164, 65, .35);
+}

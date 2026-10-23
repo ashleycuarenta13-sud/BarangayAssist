@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% from '_admin_nav.html' import admin_sidebar, admin_topbar, admin_footer with context %}
+
+{% block title %}Users - BarangayAssist{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+
+    {{ admin_sidebar('users') }}
+
+    <main class="admin-main">
+
+        {{ admin_topbar('ADMINISTRATION', 'Users') }}
+
+        <div class="admin-content">
+
+            <section class="admin-intro">
+                <div class="intro-text">
+                    <span class="section-label">USER MANAGEMENT</span>
+                    <h2>Registered Accounts</h2>
+                    <p>
+                        Review every account registered on the portal,
+                        grouped by their access role.
+                    </p>
+                </div>
+                <div class="overview-icon">
+                    <ion-icon name="people-outline"></ion-icon>
+                </div>
+            </section>
+
+            <section class="stats-grid">
+                <div class="admin-stat-card total">
+                    <div class="stat-icon">
+                        <ion-icon name="people-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Total Accounts</span>
+                        <strong>{{ users|length }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card pending">
+                    <div class="stat-icon">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Residents</span>
+                        <strong>{{ resident_count }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card progress">
+                    <div class="stat-icon">
+                        <ion-icon name="shield-checkmark-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Staff</span>
+                        <strong>{{ staff_count }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card resolved">
+                    <div class="stat-icon">
+                        <ion-icon name="document-text-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Admins</span>
+                        <strong>{{ users|selectattr('role', 'equalto', 'admin')|list|length }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="concerns-panel">
+
+                <div class="panel-header">
+                    <div>
+                        <span class="section-label">DIRECTORY</span>
+                        <h2>All Users</h2>
+                    </div>
+                    <div class="filter-area">
+                        <input
+                            id="searchUsers"
+                            type="search"
+                            class="concern-search-input"
+                            placeholder="Search name, email, or purok..."
+                            aria-label="Search users">
+                    </div>
+                </div>
+
+                <div class="table-header admin-table-cols">
+                    <span>USER</span>
+                    <span>PUROK / ZONE</span>
+                    <span>CONTACT</span>
+                    <span>ROLE</span>
+                    <span>CONCERNS</span>
+                </div>
+
+                <div id="userList">
+                    {% for user in users %}
+                    <div class="table-row admin-table-cols admin-user-row"
+                         data-search="{{ (user.name ~ ' ' ~ user.email ~ ' ' ~ (user.purok or '') ~ ' ' ~ user.role)|lower }}">
+
+                        <div class="concern-name">
+                            <div class="table-icon">
+                                {% if user.role == 'admin' %}
+                                    <ion-icon name="shield-checkmark-outline"></ion-icon>
+                                {% elif user.role == 'staff' %}
+                                    <ion-icon name="person-outline"></ion-icon>
+                                {% else %}
+                                    <ion-icon name="people-outline"></ion-icon>
+                                {% endif %}
+                            </div>
+                            <div class="concern-text">
+                                <strong>{{ user.name }}</strong>
+                                <small>{{ user.email }}</small>
+                            </div>
+                        </div>
+
+                        <span class="category">{{ user.purok or '—' }}</span>
+
+                        <span class="category">{{ user.contact or '—' }}</span>
+
+                        <span class="status {{ user.role|slugify }}-status role-badge">
+                            {{ user.role|title }}
+                        </span>
+
+                        <span class="category">
+                            {{ user.concern_count or 0 }} filed
+                        </span>
+
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <ion-icon name="people-outline"></ion-icon>
+                        <h3>No users yet</h3>
+                        <p>Registered accounts will appear here.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <p id="noUserResults" class="admin-empty-note" hidden>
+                    No users match your search.
+                </p>
+
+            </section>
+
+            {{ admin_footer() }}
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin_users.js') }}"></script>
+{% endblock %}

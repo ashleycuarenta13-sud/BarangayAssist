@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from '_admin_nav.html' import admin_sidebar, admin_topbar, admin_footer with context %}
 
 {% block title %}Admin Dashboard - BarangayAssist{% endblock %}
 
@@ -11,185 +12,14 @@
 
 <div class="admin-dashboard">
 
-    <!-- ================= SIDEBAR ================= -->
-
-    <aside class="admin-sidebar" id="adminSidebar">
-
-        <div class="admin-brand">
-            <img
-                src="{{ url_for('static', filename='images/barangayassist_logo.png') }}"
-                alt="BarangayAssist Community Concern Portal"
-                class="dashboard-logo"
-            >
-        </div>
-
-
-        <nav class="admin-nav">
-
-            <p class="nav-title">
-                ADMINISTRATION
-            </p>
-
-
-            <a href="{{ url_for('admin_dashboard') }}"
-               class="admin-nav-link active">
-
-                <ion-icon name="grid-outline"></ion-icon>
-
-                <span>Dashboard</span>
-
-            </a>
-
-
-            <a href="#"
-               class="admin-nav-link">
-
-                <ion-icon name="document-text-outline"></ion-icon>
-
-                <span>All Concerns</span>
-
-            </a>
-
-
-            <a href="#"
-               class="admin-nav-link">
-
-                <ion-icon name="people-outline"></ion-icon>
-
-                <span>Users</span>
-
-            </a>
-
-
-            <a href="#"
-               class="admin-nav-link">
-
-                <ion-icon name="person-outline"></ion-icon>
-
-                <span>Barangay Staff</span>
-
-            </a>
-
-
-            <a href="#"
-               class="admin-nav-link">
-
-                <ion-icon name="git-network-outline"></ion-icon>
-
-                <span>Service Routing</span>
-
-            </a>
-
-
-            <a href="#"
-               class="admin-nav-link">
-
-                <ion-icon name="bar-chart-outline"></ion-icon>
-
-                <span>Reports</span>
-
-            </a>
-
-
-            <p class="nav-title system-title">
-                SYSTEM
-            </p>
-
-
-            <a href="#"
-               class="admin-nav-link">
-
-                <ion-icon name="settings-outline"></ion-icon>
-
-                <span>Settings</span>
-
-            </a>
-
-            <button type="button"
-                    class="admin-nav-link admin-theme-toggle"
-                    id="adminDarkModeBtn">
-
-                <ion-icon name="moon-outline" id="adminDarkModeIcon"></ion-icon>
-
-                <span id="adminDarkModeText">Dark Mode</span>
-
-            </button>
-
-
-            <a href="{{ url_for('logout') }}"
-               class="admin-nav-link logout-link">
-
-                <ion-icon name="log-out-outline"></ion-icon>
-
-                <span>Logout</span>
-
-            </a>
-
-        </nav>
-
-    </aside>
-
+    {{ admin_sidebar('overview') }}
 
     <!-- ================= MAIN ================= -->
 
     <main class="admin-main">
 
 
-        <!-- ================= TOP BAR ================= -->
-
-        <header class="admin-topbar">
-
-            <button
-                class="mobile-menu"
-                id="mobileMenu"
-                type="button">
-
-                <ion-icon name="menu-outline"></ion-icon>
-
-            </button>
-
-
-            <div class="topbar-title">
-
-                <span>ADMINISTRATION</span>
-
-                <h1>System Overview</h1>
-
-            </div>
-
-
-            <div class="admin-profile">
-
-                <div class="admin-avatar">
-
-                    <ion-icon
-                        name="shield-checkmark-outline">
-                    </ion-icon>
-
-                </div>
-
-
-                <div class="admin-user-info">
-
-                    <strong>
-                        {{ clean_name }}
-                    </strong>
-
-                    <span>
-                        Barangay Administrator
-                    </span>
-
-                </div>
-
-
-                <ion-icon
-                    name="chevron-down-outline"
-                    class="profile-arrow">
-                </ion-icon>
-
-            </div>
-
-        </header>
+        {{ admin_topbar('ADMINISTRATION', 'System Overview') }}
 
 
         <!-- ================= CONTENT ================= -->
@@ -642,7 +472,11 @@
 
                         <span class="date">
 
-                            {{ concern.created_at.strftime('%b %d, %Y') }}
+                            {% if concern.created_at %}
+                                {{ concern.created_at.strftime('%b %d, %Y') }}
+                            {% else %}
+                                Date unavailable
+                            {% endif %}
 
                         </span>
 
@@ -687,17 +521,7 @@
 
             <!-- ================= FOOTER ================= -->
 
-            <footer class="admin-footer">
-
-                <span>
-                    © BarangayAssist. All rights reserved.
-                </span>
-
-                <em>
-                    Serbisyo sa Mamamayan
-                </em>
-
-            </footer>
+            {{ admin_footer() }}
 
         </div>
 

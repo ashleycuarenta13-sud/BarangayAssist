@@ -1,0 +1,162 @@
+{# Shared admin chrome. Import with context so url_for resolves:
+   {% from '_admin_nav.html' import admin_sidebar, admin_topbar with context %} #}
+
+{% macro admin_sidebar(active) %}
+<aside class="admin-sidebar" id="adminSidebar">
+
+    <div class="admin-brand">
+        <img
+            src="{{ url_for('static', filename='images/barangayassist_logo.png') }}"
+            alt="BarangayAssist Community Concern Portal"
+            class="dashboard-logo"
+        >
+    </div>
+
+    <nav class="admin-nav">
+
+        <p class="nav-title">
+            ADMINISTRATION
+        </p>
+
+        <a href="{{ url_for('admin_dashboard') }}"
+           class="admin-nav-link {% if active == 'overview' %}active{% endif %}">
+            <ion-icon name="grid-outline"></ion-icon>
+            <span>Overview</span>
+        </a>
+
+        <a href="{{ url_for('admin_concerns') }}"
+           class="admin-nav-link {% if active == 'concerns' %}active{% endif %}">
+            <ion-icon name="document-text-outline"></ion-icon>
+            <span>All Concerns</span>
+        </a>
+
+        <a href="{{ url_for('admin_users') }}"
+           class="admin-nav-link {% if active == 'users' %}active{% endif %}">
+            <ion-icon name="people-outline"></ion-icon>
+            <span>Users</span>
+        </a>
+
+        <a href="{{ url_for('admin_staff') }}"
+           class="admin-nav-link {% if active == 'staff' %}active{% endif %}">
+            <ion-icon name="person-outline"></ion-icon>
+            <span>Barangay Staff</span>
+        </a>
+
+        <a href="{{ url_for('admin_routing') }}"
+           class="admin-nav-link {% if active == 'routing' %}active{% endif %}">
+            <ion-icon name="git-network-outline"></ion-icon>
+            <span>Service Routing</span>
+        </a>
+
+        <a href="{{ url_for('admin_reports') }}"
+           class="admin-nav-link {% if active == 'reports' %}active{% endif %}">
+            <ion-icon name="bar-chart-outline"></ion-icon>
+            <span>Reports</span>
+        </a>
+
+
+        <p class="nav-title system-title">
+            SYSTEM
+        </p>
+
+        <a href="{{ url_for('admin_settings') }}"
+           class="admin-nav-link {% if active == 'settings' %}active{% endif %}">
+            <ion-icon name="settings-outline"></ion-icon>
+            <span>Settings</span>
+        </a>
+
+        <button type="button"
+                class="admin-nav-link admin-theme-toggle"
+                id="adminDarkModeBtn">
+
+            <ion-icon name="moon-outline" id="adminDarkModeIcon"></ion-icon>
+
+            <span id="adminDarkModeText">Dark Mode</span>
+
+        </button>
+
+        <a href="{{ url_for('logout') }}"
+           class="admin-nav-link logout-link">
+
+            <ion-icon name="log-out-outline"></ion-icon>
+
+            <span>Logout</span>
+
+        </a>
+
+    </nav>
+
+</aside>
+{% endmacro %}
+
+
+{% macro admin_topbar(title, subtitle) %}
+<header class="admin-topbar">
+
+    <button
+        class="mobile-menu"
+        id="mobileMenu"
+        type="button">
+
+        <ion-icon name="menu-outline"></ion-icon>
+
+    </button>
+
+
+    <div class="topbar-title">
+
+        <span>{{ title }}</span>
+
+        <h1>{{ subtitle }}</h1>
+
+    </div>
+
+
+    <div class="admin-profile">
+
+        <div class="admin-avatar">
+
+            <ion-icon
+                name="shield-checkmark-outline">
+            </ion-icon>
+
+        </div>
+
+
+        <div class="admin-user-info">
+
+            <strong>
+                {{ clean_name }}
+            </strong>
+
+            <span>
+                Barangay Administrator
+            </span>
+
+        </div>
+
+
+        <ion-icon
+            name="chevron-down-outline"
+            class="profile-arrow">
+        </ion-icon>
+
+    </div>
+
+</header>
+{% endmacro %}
+
+
+{% macro admin_footer() %}
+<footer class="admin-footer">
+
+    <span>
+        © BarangayAssist. All rights reserved.
+    </span>
+
+    <em>
+        Serbisyo sa Mamamayan
+    </em>
+
+</footer>
+{% endmacro %}

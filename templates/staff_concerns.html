@@ -1,0 +1,264 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Assigned Concerns - BarangayAssist{% endblock %}
+{% block topbar_title %}Assigned Concerns{% endblock %}
+
+{% block content %}
+
+
+<!-- ================= INTRO ================= -->
+
+<section class="admin-intro">
+
+    <div class="intro-text">
+
+        <span class="section-label">ASSIGNED CONCERNS</span>
+
+        <h2>Concern Queue</h2>
+
+        <p>
+            Every concern assigned to you, with a status control
+            so you can update its progress any time.
+        </p>
+
+    </div>
+
+    <div class="overview-icon">
+
+        <ion-icon
+            name="clipboard-outline">
+        </ion-icon>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CONCERN LIST ================= -->
+
+<section class="concerns-panel">
+
+
+    <div class="panel-header">
+
+        <div>
+
+            <span class="section-label">
+                ALL RECORDS
+            </span>
+
+            <h2>
+                My Assigned Concerns
+            </h2>
+
+        </div>
+
+
+        <div class="filter-area">
+
+            <input
+                type="search"
+                id="searchConcern"
+                class="concern-search-input"
+                placeholder="Search concerns, residents or categories...">
+
+
+            <button
+                class="filter-btn active"
+                data-filter="all"
+                type="button">
+
+                All
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                data-filter="Pending"
+                type="button">
+
+                Pending
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                data-filter="In Progress"
+                type="button">
+
+                In Progress
+
+            </button>
+
+
+            <button
+                class="filter-btn"
+                data-filter="Resolved"
+                type="button">
+
+                Resolved
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="staff-table">
+
+        <!-- TABLE HEADER -->
+
+        <div class="table-header">
+
+            <span>
+                CONCERN
+            </span>
+
+            <span>
+                RESIDENT
+            </span>
+
+            <span>
+                CATEGORY
+            </span>
+
+            <span>
+                STATUS
+            </span>
+
+            <span>
+                UPDATE
+            </span>
+
+        </div>
+
+
+        <div id="concernList">
+
+            {% for concern in concerns %}
+
+            <div
+                class="table-row"
+                data-status="{{ concern.status }}">
+
+                <div class="concern-name">
+
+                    <div class="table-icon">
+
+                        <ion-icon
+                            name="document-text-outline">
+                        </ion-icon>
+
+                    </div>
+
+
+                    <div class="concern-text">
+
+                        <strong>
+                            {{ concern.title }}
+                        </strong>
+
+                        <small>
+                            {{ concern.description|truncatewords(8) }}
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <span class="resident-name">
+
+                    {{ concern.resident_name or 'Unknown resident' }}
+
+                </span>
+
+
+                <span class="category">
+
+                    {{ concern.category or 'General' }}
+
+                </span>
+
+
+                <span
+                    class="status {{ concern.status|slugify }}-status">
+
+                    {{ concern.status }}
+
+                </span>
+
+
+                <form
+                    class="staff-action"
+                    method="POST"
+                    action="{{ url_for('staff_update_concern', concern_id=concern.id) }}">
+
+                    <select
+                        id="status-{{ concern.id }}"
+                        name="status"
+                        aria-label="Status for {{ concern.title }}"
+                        required>
+
+                        <option value="Pending" {% if concern.status == 'Pending' %}selected{% endif %}>
+                            Pending
+                        </option>
+
+                        <option value="In Progress" {% if concern.status == 'In Progress' %}selected{% endif %}>
+                            In Progress
+                        </option>
+
+                        <option value="Resolved" {% if concern.status == 'Resolved' %}selected{% endif %}>
+                            Resolved
+                        </option>
+
+                    </select>
+
+                    <button type="submit" class="save-btn">
+                        Save
+                    </button>
+
+                </form>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty-state">
+
+                <ion-icon
+                    name="clipboard-outline">
+                </ion-icon>
+
+                <h3>
+                    No assigned concerns yet
+                </h3>
+
+                <p>
+                    Concerns assigned to you by the barangay
+                    administrator will appear here.
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-empty-note" id="noSearchResults" hidden>
+
+        No concerns match your search.
+
+    </div>
+
+</section>
+
+
+{% endblock %}

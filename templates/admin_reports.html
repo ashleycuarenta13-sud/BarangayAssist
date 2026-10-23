@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% from '_admin_nav.html' import admin_sidebar, admin_topbar, admin_footer with context %}
+
+{% block title %}Reports - BarangayAssist{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_pages.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+
+    {{ admin_sidebar('reports') }}
+
+    <main class="admin-main">
+
+        {{ admin_topbar('ADMINISTRATION', 'Reports') }}
+
+        <div class="admin-content">
+
+            <section class="admin-intro">
+                <div class="intro-text">
+                    <span class="section-label">REPORTS &amp; ANALYTICS</span>
+                    <h2>Community Snapshot</h2>
+                    <p>
+                        A summary of concern volume, resolution performance,
+                        and where reports are coming from.
+                    </p>
+                </div>
+                <div class="overview-icon">
+                    <ion-icon name="bar-chart-outline"></ion-icon>
+                </div>
+            </section>
+
+            <section class="stats-grid">
+                <div class="admin-stat-card total">
+                    <div class="stat-icon">
+                        <ion-icon name="document-text-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Total Concerns</span>
+                        <strong>{{ total_concerns }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card pending">
+                    <div class="stat-icon">
+                        <ion-icon name="time-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Pending</span>
+                        <strong>{{ pending_count }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card progress">
+                    <div class="stat-icon">
+                        <ion-icon name="sync-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>In Progress</span>
+                        <strong>{{ in_progress_count }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card resolved">
+                    <div class="stat-icon">
+                        <ion-icon name="checkmark-circle-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Resolved</span>
+                        <strong>{{ resolved_count }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="stats-grid report-secondary">
+                <div class="admin-stat-card total">
+                    <div class="stat-icon">
+                        <ion-icon name="people-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Residents</span>
+                        <strong>{{ total_residents }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card total">
+                    <div class="stat-icon">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Staff</span>
+                        <strong>{{ total_staff }}</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card resolved">
+                    <div class="stat-icon">
+                        <ion-icon name="speedometer-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Resolution Rate</span>
+                        <strong>{{ resolution_rate }}%</strong>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card pending">
+                    <div class="stat-icon">
+                        <ion-icon name="trending-up-outline"></ion-icon>
+                    </div>
+                    <div class="stat-info">
+                        <span>Avg. Per Report</span>
+                        <strong>{{ '%.1f'|format((total_concerns / total_residents) if total_residents else 0) }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <div class="report-grid">
+
+                <section class="concerns-panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="section-label">DISTRIBUTION</span>
+                            <h2>Concerns by Category</h2>
+                        </div>
+                    </div>
+
+                    <div class="report-bars">
+                        {% for row in by_category %}
+                        <div class="report-bar-row">
+                            <div class="report-bar-label">
+                                <span>{{ row.category }}</span>
+                                <strong>{{ row.total_count }}</strong>
+                            </div>
+                            <div class="report-bar-track">
+                                <div class="report-bar-fill"
+                                     style="width: {{ ((row.total_count / max_category) * 100)|round|int }}%"></div>
+                            </div>
+                            <small>
+                                {{ row.resolved_count or 0 }} resolved
+                            </small>
+                        </div>
+                        {% else %}
+                        <p class="admin-empty-note">No concerns recorded yet.</p>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="concerns-panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="section-label">ORIGIN</span>
+                            <h2>Concerns by Purok</h2>
+                        </div>
+                    </div>
+
+                    <div class="report-bars">
+                        {% for row in by_purok %}
+                        <div class="report-bar-row">
+                            <div class="report-bar-label">
+                                <span>{{ row.purok }}</span>
+                                <strong>{{ row.total_count }}</strong>
+                            </div>
+                            <div class="report-bar-track">
+                                <div class="report-bar-fill gold"
+                                     style="width: {{ ((row.total_count / max_purok) * 100)|round|int }}%"></div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <p class="admin-empty-note">No purok data recorded yet.</p>
+                        {% endfor %}
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="report-grid">
+
+                <section class="concerns-panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="section-label">TREND</span>
+                            <h2>Monthly Volume</h2>
+                        </div>
+                    </div>
+
+                    <div class="report-bars">
+                        {% for row in by_month %}
+                        <div class="report-bar-row">
+                            <div class="report-bar-label">
+                                <span>{{ row.month_label }}</span>
+                                <strong>{{ row.total_count }}</strong>
+                            </div>
+                            <div class="report-bar-track">
+                                <div class="report-bar-fill blue"
+                                     style="width: {{ ((row.total_count / max_month) * 100)|round|int }}%"></div>
+                            </div>
+                            <small>{{ row.resolved_count or 0 }} resolved</small>
+                        </div>
+                        {% else %}
+                        <p class="admin-empty-note">No monthly data recorded yet.</p>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="concerns-panel">
+                    <div class="panel-header">
+                        <div>
+                            <span class="section-label">ENGAGEMENT</span>
+                            <h2>Top Reporters</h2>
+                        </div>
+                    </div>
+
+                    <div class="report-list">
+                        {% for row in top_reporters %}
+                        <div class="report-list-row">
+                            <div class="report-rank">{{ loop.index }}</div>
+                            <div class="report-list-body">
+                                <strong>{{ row.resident_name }}</strong>
+                                <small>{{ row.purok }}</small>
+                            </div>
+                            <span class="report-list-count">
+                                {{ row.concern_count }} filed
+                            </span>
+                        </div>
+                        {% else %}
+                        <p class="admin-empty-note">No concerns recorded yet.</p>
+                        {% endfor %}
+                    </div>
+                </section>
+
+            </div>
+
+            {{ admin_footer() }}
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+{% endblock %}
